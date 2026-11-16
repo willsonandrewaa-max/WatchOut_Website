@@ -90,10 +90,19 @@
       var text = (contact.whatsappGreeting ? contact.whatsappGreeting + '\n\n' : '') + 'Nama: ' + name + '\n' + message;
       var url = 'https://wa.me/' + waNumber + '?text=' + encodeURIComponent(text);
       // window.open(..., 'noopener') always returns null, so open normally and cut the link
-      var win = window.open(url, '_blank');
-      if (win) { try { win.opener = null; } catch (err) { /* ignore */ } }
-      else window.location.href = url;
-      if (status) status.textContent = 'WhatsApp sudah dibuka. Tinggal tekan kirim di sana.';
+      var win = null;
+      try { win = window.open(url, '_blank'); } catch (err) { win = null; }
+      if (win) {
+        try { win.opener = null; } catch (err) { /* ignore */ }
+        if (status) status.textContent = 'WhatsApp sudah dibuka. Tinggal tekan kirim di sana.';
+      } else if (status) {
+        // jendela baru diblokir browser: tampilkan tautan yang bisa diklik
+        status.textContent = 'Pesan Anda sudah disiapkan. ';
+        var link = document.createElement('a');
+        link.href = url; link.target = '_blank'; link.rel = 'noopener';
+        link.textContent = 'Buka WhatsApp untuk mengirim';
+        status.appendChild(link);
+      }
     });
     each('[data-contact-form] input, [data-contact-form] textarea', function (field) {
       field.addEventListener('input', function () {
@@ -127,4 +136,25 @@
 
   /* ---------- tahun di footer ---------- */
   each('[data-year]', function (el) { el.textContent = String(new Date().getFullYear()); });
+
+  /* ---------- interaksi foto: miring mengikuti kursor, aktif juga saat disentuh ---------- */
+  each('.story__photo, .solution__photo, .specs__photo', function (fig) {
+    function reset() {
+      fig.classList.remove('is-photo-active');
+      fig.style.setProperty('--rx', '0deg'); fig.style.setProperty('--ry', '0deg');
+    }
+    function move(e) {
+      var r = fig.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      var max = parseFloat(getComputedStyle(fig).getPropertyValue('--photo-tilt')) || 6;
+      fig.classList.add('is-photo-active');
+      fig.style.setProperty('--ry', (x * max * 2).toFixed(2) + 'deg');
+      fig.style.setProperty('--rx', (-y * max * 2).toFixed(2) + 'deg');
+    }
+    fig.addEventListener('pointermove', move);
+    fig.addEventListener('pointerdown', move);
+    fig.addEventListener('pointerleave', reset);
+    fig.addEventListener('pointercancel', reset);
+    fig.addEventListener('pointerup', function (e) { if (e.pointerType !== 'mouse') setTimeout(reset, 600); });
+  });
 })();

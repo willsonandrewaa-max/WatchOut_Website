@@ -28,9 +28,9 @@
    * zoom = jarak relatif, y = titik fokus vertikal)
    * ------------------------------------------------------------------ */
   var VIEWS = {
-    front: { yaw: -0.38, pitch: 0.12, zoom: 1.0, y: -1.55 },
-    back:  { yaw: Math.PI - 0.38, pitch: 0.08, zoom: 1.0, y: -1.55 },
-    cord:  { yaw: -0.62, pitch: 0.02, zoom: 0.66, y: -2.75 }
+    front: { yaw: -0.34, pitch: 0.10, zoom: 0.86, x: 0.85, y: 0 },
+    back:  { yaw: Math.PI - 0.34, pitch: 0.08, zoom: 0.86, x: 0.85, y: 0 },
+    cord:  { yaw: -0.5, pitch: 0.06, zoom: 0.66, x: 1.9, y: 0 }
   };
 
   /* ------------------------------------------------------------------ *
@@ -320,7 +320,7 @@
   }
   function drawScreen(cv, now, alarmPhase) {
     var x = cv.getContext('2d'), W = cv.width, H = cv.height;
-    var font = '"Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, sans-serif';
+    var font = '"Poppins", system-ui, sans-serif';
     x.fillStyle = '#030203';
     x.fillRect(0, 0, W, H);
     var mx = W * 0.13, my = H * 0.15;
@@ -330,37 +330,52 @@
       roundRect(x, mx, my, W - mx * 2, H - my * 2, H * 0.08); x.fill();
       var fg = on ? '#FFF6EC' : '#FF4A36';
       // warning triangle
-      var cx = W / 2, cy = H * 0.40, s = H * 0.17;
-      x.strokeStyle = fg; x.lineWidth = H * 0.035; x.lineJoin = 'round';
+      var U2 = Math.min(W, H), cx = W / 2, cy = H / 2 - U2 * 0.1, s = U2 * 0.17;
+      x.strokeStyle = fg; x.lineWidth = U2 * 0.035; x.lineJoin = 'round';
       x.beginPath(); x.moveTo(cx, cy - s); x.lineTo(cx + s * 1.12, cy + s * 0.8); x.lineTo(cx - s * 1.12, cy + s * 0.8); x.closePath(); x.stroke();
-      x.fillStyle = fg; x.fillRect(cx - H * 0.016, cy - s * 0.45, H * 0.032, s * 0.75);
-      x.beginPath(); x.arc(cx, cy + s * 0.52, H * 0.022, 0, Math.PI * 2); x.fill();
+      x.fillStyle = fg; x.fillRect(cx - U2 * 0.016, cy - s * 0.45, U2 * 0.032, s * 0.75);
+      x.beginPath(); x.arc(cx, cy + s * 0.52, U2 * 0.022, 0, Math.PI * 2); x.fill();
       x.textAlign = 'center'; x.textBaseline = 'middle';
-      x.font = '800 ' + Math.round(H * 0.13) + 'px ' + font;
-      x.fillText('Minta tolong!', W / 2, H * 0.70);
+      x.font = '800 ' + Math.round(U2 * 0.11) + 'px ' + font;
+      x.fillText('Minta', W / 2, H / 2 + U2 * 0.24);
+      x.fillText('tolong!', W / 2, H / 2 + U2 * 0.37);
       return;
     }
     x.textAlign = 'center'; x.textBaseline = 'alphabetic';
+    var U = Math.min(W, H), cy = H / 2;
     x.fillStyle = '#FFF4EA';
-    x.font = '700 ' + Math.round(H * 0.36) + 'px ' + font;
-    x.fillText(pad(now.getHours()) + ':' + pad(now.getMinutes()), W / 2, H * 0.56);
-    x.fillStyle = '#FF8E86';
-    x.font = '700 ' + Math.round(H * 0.085) + 'px ' + font;
-    x.fillText(DAYS[now.getDay()] + ', ' + now.getDate() + ' ' + MONTHS[now.getMonth()], W / 2, H * 0.72);
+    if (H > W * 1.05) { // layar tegak: jam di atas, menit di bawah
+      x.font = '700 ' + Math.round(U * 0.46) + 'px ' + font;
+      x.fillText(pad(now.getHours()), W / 2, cy - U * 0.1);
+      x.fillText(pad(now.getMinutes()), W / 2, cy + U * 0.3);
+      x.fillStyle = '#FF8E86';
+      x.font = '700 ' + Math.round(U * 0.095) + 'px ' + font;
+      x.fillText(DAYS[now.getDay()] + ', ' + now.getDate() + ' ' + MONTHS[now.getMonth()], W / 2, cy + U * 0.48);
+      cy += U * 0.57;
+    } else {
+      x.font = '700 ' + Math.round(U * 0.36) + 'px ' + font;
+      x.fillText(pad(now.getHours()) + ':' + pad(now.getMinutes()), W / 2, cy + U * 0.06);
+      x.fillStyle = '#FF8E86';
+      x.font = '700 ' + Math.round(U * 0.085) + 'px ' + font;
+      x.fillText(DAYS[now.getDay()] + ', ' + now.getDate() + ' ' + MONTHS[now.getMonth()], W / 2, cy + U * 0.22);
+      cy += U * 0.29;
+    }
     // small seconds bar
-    var bw = W * 0.34, bx = (W - bw) / 2, by = H * 0.79;
-    x.fillStyle = 'rgba(255,244,234,0.16)'; roundRect(x, bx, by, bw, H * 0.018, H * 0.009); x.fill();
-    x.fillStyle = '#FF8E86'; roundRect(x, bx, by, Math.max(H * 0.018, bw * (now.getSeconds() + 1) / 60), H * 0.018, H * 0.009); x.fill();
+    var bw = Math.min(W * 0.5, U * 0.4), bx = (W - bw) / 2, by = cy;
+    x.fillStyle = 'rgba(255,244,234,0.16)'; roundRect(x, bx, by, bw, U * 0.018, U * 0.009); x.fill();
+    x.fillStyle = '#FF8E86'; roundRect(x, bx, by, Math.max(U * 0.018, bw * (now.getSeconds() + 1) / 60), U * 0.018, U * 0.009); x.fill();
   }
 
   /* ------------------------------------------------------------------ *
    * Inisialisasi
    * ------------------------------------------------------------------ */
   var gl, prog, floorProg, parts = [], cordMeshes = null, floorBuf = null, screenTex = null, screenCanvas = null;
+  var roll = function (p) { return p; };
+  function rolledMatrix(cols, t) { return transformMatrix(cols.map(function (c) { return roll(c); }), roll(t)); }
   var model = null, centerW = [0, 0, 0], modelMatrix = null, cordAttach = [0, 0, 0], floorY = -5;
   var running = false, raf = 0, lastT = 0, lastSecond = -1, interacted = false;
-  var cam = { yaw: VIEWS.front.yaw, pitch: VIEWS.front.pitch, zoom: 1.2, y: VIEWS.front.y };
-  var goal = { yaw: VIEWS.front.yaw, pitch: VIEWS.front.pitch, zoom: 1.0, y: VIEWS.front.y };
+  var cam = { yaw: VIEWS.front.yaw, pitch: VIEWS.front.pitch, zoom: 1.2, x: VIEWS.front.x, y: VIEWS.front.y };
+  var goal = { yaw: VIEWS.front.yaw, pitch: VIEWS.front.pitch, zoom: 1.0, x: VIEWS.front.x, y: VIEWS.front.y };
   var autoRotate = CFG.autoRotate !== false && !reduceMotion;
   var autoSpeed = (pick(CFG.autoRotateSpeed, 12) * Math.PI) / 180;
   var lastInput = 0, alarmOn = false, pull = 0, pullVel = 0;
@@ -390,6 +405,9 @@
       var sign = s.charAt(0) === '-' ? -1 : 1, ax = s.slice(-1).toLowerCase();
       return ax === 'x' ? [sign, 0, 0] : ax === 'y' ? [0, sign, 0] : [0, 0, sign];
     });
+    // roll: putar seluruh jam (beserta tali) searah layar, supaya layar tegak seperti dipakai
+    var rollA = (CFG.roll == null ? 90 : CFG.roll) * Math.PI / 180, rc = Math.cos(rollA), rs = Math.sin(rollA);
+    roll = function (p) { return [rc * p[0] - rs * p[1], rs * p[0] + rc * p[1], p[2]]; };
     function orient(p) {
       return [ori[0][0] * p[0] + ori[1][0] * p[1] + ori[2][0] * p[2],
               ori[0][1] * p[0] + ori[1][1] * p[1] + ori[2][1] * p[2],
@@ -398,8 +416,17 @@
     var focus = model.parts.filter(function (p) { return p.object === (CFG.focusPart || 'mesh_3'); })[0] || null;
     var fb = focus ? focus.bbox : model.bounds;
     centerW = orient([(fb.min[0] + fb.max[0]) / 2, (fb.min[1] + fb.max[1]) / 2, (fb.min[2] + fb.max[2]) / 2]);
-    modelMatrix = transformMatrix(ori, scale(centerW, -1));
+    modelMatrix = rolledMatrix(ori, scale(centerW, -1));
 
+    // Logo di bagian belakang tetap tegak walaupun jam diputar (roll)
+    function uprightDecal(part) {
+      var b = part.bbox || model.bounds, k = CFG.decalScale || 0.86;
+      var c = sub(orient([(b.min[0] + b.max[0]) / 2, (b.min[1] + b.max[1]) / 2, (b.min[2] + b.max[2]) / 2]), centerW);
+      var rc2 = roll(c), cols = ori.map(function (v) { return [v[0] * k, v[1] * k, v[2]]; });
+      // p -> k*(orient(p) - centerW - c) + roll(c)   (z tidak diskalakan)
+      var t0 = sub(scale(centerW, -1), c);
+      return transformMatrix(cols, [t0[0] * k + rc2[0], t0[1] * k + rc2[1], t0[2] + rc2[2]]);
+    }
     var bmin = model.bounds.min, bsize = [0, 1, 2].map(function (k) { return model.bounds.max[k] - model.bounds.min[k]; });
     var matCfg = CFG.materials || {};
     var screenMat = CFG.screen && CFG.screen.enabled !== false ? CFG.screen.material : null;
@@ -421,7 +448,7 @@
       if (isScreen) { // planar UVs across the screen as seen from the front
         var o = [], mnx = Infinity, mxx = -Infinity, mny = Infinity, mxy = -Infinity;
         for (var v = 0; v < pos.length; v += 3) {
-          var w = orient([pos[v], pos[v + 1], pos[v + 2]]); o.push(w);
+          var w = roll(sub(orient([pos[v], pos[v + 1], pos[v + 2]]), centerW)); o.push(w);
           mnx = Math.min(mnx, w[0]); mxx = Math.max(mxx, w[0]); mny = Math.min(mny, w[1]); mxy = Math.max(mxy, w[1]);
         }
         uv = new Float32Array(o.length * 2);
@@ -441,7 +468,7 @@
         idx: buffer(gl.ELEMENT_ARRAY_BUFFER, idx), count: idx.length, type: p.index32 ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT,
         nrmType: gl.BYTE, color: mc.color ? hexToLinear(mc.color) : (mtl.kd || [0.8, 0.8, 0.8]),
         rough: pick(mc.roughness, 0.5), coat: pick(mc.clearcoat, 0), screen: isScreen, map: mapTex,
-        transparent: !!mapTex, matrix: modelMatrix
+        transparent: !!mapTex, matrix: mapTex ? uprightDecal(p) : modelMatrix
       });
     });
 
@@ -463,9 +490,9 @@
     var minY = Infinity;
     for (var c = 0; c < 8; c++) {
       var corner = [c & 1 ? model.bounds.max[0] : model.bounds.min[0], c & 2 ? model.bounds.max[1] : model.bounds.min[1], c & 4 ? model.bounds.max[2] : model.bounds.min[2]];
-      minY = Math.min(minY, sub(orient(corner), centerW)[1]);
+      minY = Math.min(minY, roll(sub(orient(corner), centerW))[1]);
     }
-    floorY = Math.min(minY, lowest === -Infinity ? minY : lowest) - 0.45;
+    floorY = minY - 0.45;
     var F = 40;
     floorBuf = buffer(gl.ARRAY_BUFFER, new Float32Array([-F, floorY, -F, F, floorY, -F, -F, floorY, F, F, floorY, F]));
 
@@ -575,9 +602,9 @@
     var aspect = canvas.width / canvas.height;
     var fov = 28 * Math.PI / 180;
     // keep the watch + cord framed on any screen shape
-    var frameH = 7.6, frameW = 4.6;
+    var frameH = 7.6, frameW = 7.8;
     var dist = Math.max((frameH / 2) / Math.tan(fov / 2), (frameW / 2) / (Math.tan(fov / 2) * aspect)) * cam.zoom;
-    var target = [0, cam.y, 0];
+    var target = [cam.x, cam.y, 0];
     var eye = [target[0] + dist * Math.sin(cam.yaw) * Math.cos(cam.pitch), target[1] + dist * Math.sin(cam.pitch), target[2] + dist * Math.cos(cam.yaw) * Math.cos(cam.pitch)];
     var view = lookAt(eye, target, [0, 1, 0]);
     var viewProj = mat4Multiply(perspective(fov, aspect, 0.5, 120), view.m);
@@ -620,10 +647,10 @@
     opaque.forEach(function (p) { drawPart(p); });
     if (cordMeshes) {
       var A = cordAttach, stretch = (0.44 + pull) / 0.44;
-      drawPart(cordMeshes.thread, transformMatrix([[1, 0, 0], [0, stretch, 0], [0, 0, 1]], A));
-      var low = transformMatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]], [A[0], A[1] - pull, A[2]]);
+      drawPart(cordMeshes.thread, rolledMatrix([[1, 0, 0], [0, stretch, 0], [0, 0, 1]], A));
+      var low = rolledMatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]], [A[0], A[1] - pull, A[2]]);
       drawPart(cordMeshes.lower, low);
-      drawPart(cordMeshes.mark, transformMatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]], [A[0], A[1] - pull, A[2] - 0.021]));
+      drawPart(cordMeshes.mark, rolledMatrix([[1, 0, 0], [0, 1, 0], [0, 0, 1]], [A[0], A[1] - pull, A[2] - 0.021]));
     }
     // transparent decals (logo) last
     gl.enable(gl.BLEND);
@@ -645,7 +672,7 @@
 
     if (autoRotate && !dragging && performance.now() - lastInput > 2600) { goal.yaw += autoSpeed * dt; moving = true; }
     var k = reduceMotion ? 30 : 7;
-    ['yaw', 'pitch', 'zoom', 'y'].forEach(function (key) {
+    ['yaw', 'pitch', 'zoom', 'x', 'y'].forEach(function (key) {
       var nv = damp(cam[key], goal[key], k, dt);
       if (Math.abs(nv - goal[key]) > 1e-4) moving = true;
       cam[key] = Math.abs(nv - goal[key]) < 1e-5 ? goal[key] : nv;
@@ -705,8 +732,8 @@
     var v = VIEWS[name]; if (!v) return;
     // rotate the shortest way round
     var twoPi = Math.PI * 2, dy = ((v.yaw - goal.yaw) % twoPi + twoPi * 1.5) % twoPi - Math.PI;
-    goal.yaw += dy; goal.pitch = v.pitch; goal.zoom = v.zoom; goal.y = v.y;
-    if (instant) { cam.yaw = goal.yaw; cam.pitch = goal.pitch; cam.y = goal.y; }
+    goal.yaw += dy; goal.pitch = v.pitch; goal.zoom = v.zoom; goal.x = v.x || 0; goal.y = v.y;
+    if (instant) { cam.yaw = goal.yaw; cam.pitch = goal.pitch; cam.x = goal.x; cam.y = goal.y; }
     setPressed(name);
     var btn = viewButtons.filter(function (b) { return b.getAttribute('data-viewer-view') === name; })[0];
     if (!instant && captionEl && btn && btn.getAttribute('data-caption')) captionEl.textContent = btn.getAttribute('data-caption');

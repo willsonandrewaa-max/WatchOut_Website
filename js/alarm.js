@@ -30,8 +30,13 @@ window.WatchOutAlarm = (function () {
   function audio() {
     var AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return null;
-    if (!audioCtx) audioCtx = new AC();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
+    try {
+      if (!audioCtx) audioCtx = new AC();
+      if (audioCtx.state === 'suspended') {
+        var resumed = audioCtx.resume();
+        if (resumed && resumed.catch) resumed.catch(function () { /* browser menolak audio */ });
+      }
+    } catch (e) { return null; }
     return audioCtx;
   }
 
@@ -39,6 +44,10 @@ window.WatchOutAlarm = (function () {
     if (nodes || !soundOn || volume <= 0) return;
     var ctx = audio();
     if (!ctx) return;
+    try { buildSiren(ctx); } catch (e) { nodes = null; /* tanpa suara, tampilan alarm tetap jalan */ }
+  }
+
+  function buildSiren(ctx) {
     var now = ctx.currentTime;
 
     var master = ctx.createGain();

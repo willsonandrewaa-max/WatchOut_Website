@@ -22,15 +22,28 @@ window.WATCHOUT_CONFIG = {
     whatsapp: '6281200000000',
     // Cara nomor ditampilkan di halaman
     whatsappLabel: '+62 812-0000-0000',
-    email: 'halo@watchout.id',
+    // Kosongkan ('') untuk menyembunyikan baris email
+    email: '',
     // Nama akun Instagram tanpa tanda @
-    instagram: 'watchout.id',
+    instagram: 'watch0ut09',
     // Kalimat pembuka pesan WhatsApp dari formulir kontak
     whatsappGreeting: 'Halo WatchOut!, saya ingin bertanya tentang jam WatchOut!.'
   },
 
   /* ------------------------------------------------------------------------
-     2. SIMULASI ALARM (tarik tali di bagian atas halaman & viewer 3D)
+     2. TOKO (bagian "Pesan WatchOut! sekarang")
+     Gambar QRIS ada di assets/img/qris-watchout.jpg (ganti file itu jika QRIS berubah)
+     ------------------------------------------------------------------------ */
+  shop: {
+    productName: 'WatchOut!',
+    price: 289000,        // harga per unit dalam rupiah, tanpa titik
+    maxQty: 10,           // jumlah maksimal per pesanan
+    // Kalimat pembuka pesan WhatsApp saat mengirim bukti pembayaran
+    confirmMessage: 'Halo WatchOut!, saya sudah membayar pesanan berikut lewat QRIS:'
+  },
+
+  /* ------------------------------------------------------------------------
+     3. SIMULASI ALARM (tarik tali di bagian atas halaman & viewer 3D)
      ------------------------------------------------------------------------ */
   alarm: {
     volume: 0.22,          // 0 = senyap, 1 = paling keras. Disarankan 0.15 – 0.3
@@ -39,7 +52,7 @@ window.WATCHOUT_CONFIG = {
   },
 
   /* ------------------------------------------------------------------------
-     3. VIEWER 3D
+     4. VIEWER 3D
      ------------------------------------------------------------------------ */
   viewer: {
     autoRotate: true,       // model berputar pelan saat tidak disentuh
@@ -76,6 +89,8 @@ window.WATCHOUT_CONFIG = {
     // Arah model: ke mana sumbu X, Y, Z model menghadap di layar.
     // Biarkan seperti ini kecuali model 3D baru menghadap ke arah lain.
     orientation: ['-y', '+z', '-x'],
+    // Putaran jam di layar (derajat). 90 = layar tegak seperti dipakai, tali penarik di kanan.
+    roll: 90,
     // Bagian model yang dijadikan pusat putaran kamera
     focusPart: 'mesh_3'
   }

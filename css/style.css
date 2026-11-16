@@ -8,28 +8,35 @@
      "CARA KERJA", "VIEWER 3D", dst.).
    ========================================================================== */
 
+/* Beatrix Antiqua (subjudul). Font berlisensi: taruh file font di assets/fonts/ dengan nama di bawah.
+   Jika file belum ada, otomatis memakai Marcellus dari Google Fonts. */
+@font-face { font-family: "Beatrix Antiqua"; font-weight: 400 700; font-display: swap;
+  src: url("../assets/fonts/BeatrixAntiqua-Regular.woff2") format("woff2"), url("../assets/fonts/BeatrixAntiqua-Regular.ttf") format("truetype"); }
+
 /* ==========================================================================
    1. PENGATURAN DASAR (design tokens)
    ========================================================================== */
 :root {
   /* Warna brand (diambil dari logo & mockup produk) */
-  --crimson: #A60914;        /* merah logo: judul, tombol utama */
+  --crimson: #A60816;        /* merah judul & elemen-elemen (palet tim) */
   --crimson-deep: #870610;   /* merah gelap: hover */
   --cream: #EFE6DD;          /* krem logo: latar utama */
   --paper: #F8F2EC;          /* krem terang: panel & formulir */
   --signal: #E62D16;         /* merah-oranye tali jam: alarm */
   --signal-strong: #CF2410;  /* versi lebih gelap agar teks putih terbaca */
   --coral: #F05457;          /* merah muda badan jam */
-  --ink: #2B0C0F;            /* warna teks utama */
-  --ink-soft: #5E3B3D;       /* teks pendukung */
+  --ink: #580010;            /* teks biasa & subjudul (palet tim) */
+  --ink-soft: #580010;       /* teks pendukung & tulisan kecil (sama dengan teks biasa) */
   --wine: #2C060A;           /* latar gelap viewer 3D */
   --wine-deep: #1E0406;      /* latar footer */
-  --line: rgba(166, 9, 20, 0.16);
+  --line: rgba(166, 9, 20, 0.16);  /* garis tepi tombol & kotak */
+  --divider: #A70815;              /* garis pembatas antar isi */
   --line-light: rgba(239, 230, 221, 0.22);
 
   /* Font */
-  --font-display: "Bagel Fat One", "Arial Rounded MT Bold", "Arial Black", system-ui, sans-serif;
-  --font-text: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "Bagel Fat One", "Arial Rounded MT Bold", "Arial Black", system-ui, sans-serif; /* judul */
+  --font-sub: "Beatrix Antiqua", "Marcellus", Georgia, serif;                                      /* subjudul */
+  --font-text: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;           /* teks biasa */
 
   /* Ukuran & jarak */
   --container: 1240px;
@@ -60,15 +67,15 @@ body {
   background: var(--cream);
   color: var(--ink);
   font-family: var(--font-text);
-  font-size: 1.25rem;
-  line-height: 1.6;
+  font-size: 1.1875rem;
+  line-height: 1.65;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 img, svg, canvas { display: block; max-width: 100%; }
 p { margin: 0 0 1em; }
 h1, h2, h3 { margin: 0; }
-h3 { font-size: 1.5rem; line-height: 1.25; font-weight: 800; }
+h3 { font-family: var(--font-sub); font-size: 1.6rem; line-height: 1.2; font-weight: 600; color: var(--ink); }
 a { color: var(--crimson); text-underline-offset: 0.18em; text-decoration-thickness: 2px; }
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; border-radius: 6px; }
@@ -77,6 +84,7 @@ button { font: inherit; color: inherit; }
   width: 1.25em; height: 1.25em; flex: none;
   fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
 }
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .visually-hidden {
   position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
@@ -197,7 +205,7 @@ html[data-sound="off"] [data-when-sound="on"] { display: none !important; }
 .menu-button[aria-expanded="true"] .icon--close { display: block; }
 
 /* ==========================================================================
-   6. HERO + DEMO TARIK TALI
+   6. HERO (judul, slogan, gambar jam tampak depan)
    ========================================================================== */
 .hero {
   position: relative; overflow: hidden; isolation: isolate;
@@ -212,10 +220,10 @@ html[data-sound="off"] [data-when-sound="on"] { display: none !important; }
 html[data-alarm="on"] .hero::before { opacity: 1; animation: hero-pulse 1s ease-in-out infinite alternate; }
 @keyframes hero-pulse { from { opacity: .45; } to { opacity: 1; } }
 
-.hero__top {
-  position: relative; z-index: 2; /* teks tetap di atas gelombang alarm */
-  display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-  gap: clamp(24px, 4vw, 72px); align-items: end;
+.hero__top { /* slogan & teks pembuka di tengah */
+  position: relative; z-index: 2;
+  display: grid; justify-items: center; text-align: center;
+  gap: clamp(18px, 2.4vw, 28px);
 }
 .hero__title {
   font-family: var(--font-display); font-weight: 400; color: var(--crimson);
@@ -224,12 +232,16 @@ html[data-alarm="on"] .hero::before { opacity: 1; animation: hero-pulse 1s ease-
   text-wrap: balance;
 }
 .hero__title span { display: block; }
-.hero__lead { font-size: 1.375rem; line-height: 1.55; max-width: 34ch; margin-bottom: 0; }
-.hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.hero__lead { font-size: 1.375rem; line-height: 1.55; max-width: 46ch; margin: 0 auto; }
+.hero__intro { display: grid; justify-items: center; }
+.hero__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 26px; }
+
+.hero__price { margin: 18px 0 0; font-size: 1.125rem; color: var(--ink-soft); }
+.hero__price strong { color: var(--crimson); font-size: 1.375rem; }
 
 .hero__stage {
   /* ukuran gambar jam: lebih lebar dari layar agar tali jam membentang dari tepi ke tepi */
-  --fig-w: clamp(1100px, calc(100vw + 60px), 1900px);
+  --fig-w: clamp(1000px, calc(100vw - 60px), 1700px);
   --fig-h: calc(var(--fig-w) * 215 / 1435);
   position: relative;
   margin-top: clamp(24px, 3vw, 40px);
@@ -303,25 +315,63 @@ html[data-alarm="on"] .cord-hint__title { color: var(--signal-strong); }
 .cord-hint__text { margin: .4rem 0 1rem; font-size: 1.0625rem; line-height: 1.5; color: var(--ink-soft); }
 .cord-hint__actions { display: flex; flex-wrap: wrap; gap: 10px; }
 
+
+.quickfacts {
+  list-style: none; padding: 0; margin-top: clamp(20px, 3vw, 36px);
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 28px;
+}
+.quickfacts li { display: flex; align-items: flex-start; gap: 12px; padding-top: 16px; border-top: 2px solid var(--divider); font-size: 1.0625rem; line-height: 1.4; color: var(--ink-soft); font-weight: 600; }
+.quickfacts .icon { width: 28px; height: 28px; color: var(--crimson); margin-top: 1px; }
+.quickfacts strong { display: block; font-size: 1.1875rem; color: var(--crimson); }
+
+/* tali penarik kecil pada jam simulator (bagian Fitur) */
+.cord__thread { fill: none; stroke: #C4BFBB; stroke-width: 1.4; stroke-linecap: round; }
+.cord__loop-edge { fill: none; stroke: #B5AFAA; stroke-width: 8.8; }
+.cord__loop { fill: none; stroke: #F6F3F0; stroke-width: 6.6; }
+.cord__band { fill: #F6F3F0; stroke: #BBB5B0; stroke-width: .9; }
+.cord__cap { fill: #E5E1DD; stroke: #A9A39E; stroke-width: .9; }
+
 /* ==========================================================================
-   7. TENTANG
+   7. MASALAH (data statistik & cerita pengguna)
    ========================================================================== */
-/* bagian ini langsung menyambung hero, jadi jarak atasnya lebih kecil */
-.section.about { padding-top: clamp(48px, 6vw, 96px); }
-.about__grid {
+.problem__intro {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: clamp(32px, 6vw, 104px); align-items: start;
+  gap: clamp(28px, 6vw, 104px); align-items: start;
 }
-.about__title { max-width: 13ch; }
-.about__body .lead { margin-bottom: 2rem; }
-.about__subtitle { font-size: 1.25rem; color: var(--crimson); margin-bottom: .5rem; }
-.checklist { list-style: none; margin: 0; padding: 0; }
-.checklist li {
-  display: flex; align-items: flex-start; gap: 14px;
-  padding: 16px 0; border-top: 2px solid var(--line); font-weight: 700;
+.problem__title { max-width: 14ch; }
+.problem__text p:last-child { margin-bottom: 0; color: var(--ink-soft); }
+
+.stats {
+  margin-top: clamp(40px, 6vw, 72px);
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 2px solid var(--divider);
 }
-.checklist li:last-child { border-bottom: 2px solid var(--line); }
-.checklist .icon { width: 30px; height: 30px; color: var(--crimson); stroke-width: 2.6; margin-top: 1px; }
+.stat { padding: 26px 28px 30px 0; border-bottom: 2px solid var(--divider); }
+.stat + .stat { padding-left: 28px; border-left: 2px solid var(--divider); }
+.stat:nth-child(3n + 1) { padding-left: 0; border-left: 0; }
+.stat p { margin: 0; }
+.stat__num { font-family: var(--font-display); font-size: clamp(2.4rem, 1.6rem + 2.2vw, 3.6rem); line-height: 1; color: var(--crimson); }
+.stat__label { margin-top: 12px !important; line-height: 1.45; }
+.stat__src { margin-top: 10px !important; font-size: 1rem; font-weight: 700; color: var(--crimson); }
+
+
+.story {
+  margin-top: clamp(48px, 7vw, 96px);
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 80px); align-items: center;
+}
+.story__photo { margin: 0; }
+.story__photo img { width: 100%; height: auto; border-radius: var(--radius-lg); }
+.quote { margin: 0; }
+.quote p { font-family: var(--font-display); font-size: clamp(1.6rem, 1.1rem + 1.3vw, 2.25rem); line-height: 1.2; color: var(--crimson); margin: 0; }
+.quote footer { margin-top: 16px; font-weight: 700; color: var(--ink-soft); }
+.chain { list-style: none; padding: 0; margin: 32px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.chain li {
+  position: relative; padding: 10px 18px; border-radius: 999px; font-weight: 800; font-size: 1.0625rem;
+  background: rgba(166, 9, 20, 0.08); color: var(--crimson);
+}
+.chain li + li::before { content: ""; position: absolute; left: -8px; top: 50%; width: 8px; height: 2px; background: var(--crimson); }
+.story__note { margin: 24px 0 0; font-size: 1.0625rem; color: var(--ink-soft); font-weight: 500; }
 
 /* ==========================================================================
    8. CARA KERJA
@@ -347,43 +397,55 @@ html[data-alarm="on"] .cord-hint__title { color: var(--signal-strong); }
 
 .how__map { margin: 0; }
 .how__map svg { width: 100%; height: auto; }
-.how__map figcaption { margin-top: 14px; font-size: 1rem; line-height: 1.5; color: rgba(239, 230, 221, 0.85); }
+.how__map figcaption { margin-top: 14px; font-size: 1rem; line-height: 1.5; color: #FFD9D3; font-weight: 500; }
 .map__ground { fill: #B5131F; }
 .map__blocks rect { fill: #92060F; }
 .map__ring { fill: none; stroke: var(--cream); stroke-width: 2.5; opacity: .9; }
-.map__ring:nth-child(2) { opacity: .65; }
 .map__ring--outer { stroke-dasharray: 9 7; stroke-width: 3; }
 .map__you { fill: var(--cream); }
-.map__you-halo { fill: rgba(239, 230, 221, 0.3); }
+.map__you-halo { fill: rgba(239, 230, 221, 0.3); transform-origin: 240px 240px; animation: halo 2.6s ease-in-out infinite; }
 .map__label rect { fill: var(--cream); }
 .map__label text { fill: var(--crimson); font-family: var(--font-text); font-size: 19px; font-weight: 800; }
-.map__rings { transform-origin: 240px 240px; }
-html[data-alarm="on"] .map__rings { animation: map-pulse 1.2s ease-out infinite; }
-@keyframes map-pulse { 0% { transform: scale(.9); opacity: .4; } 60% { opacity: 1; } 100% { transform: scale(1.03); opacity: .9; } }
+/* lingkaran "mekar": membesar dari titik pengguna lalu memudar, bergantian */
+.map__bloom circle {
+  fill: rgba(239, 230, 221, 0.08); stroke: var(--cream); stroke-width: 2.5;
+  transform-origin: 240px 240px; transform: scale(.06); opacity: 0;
+  animation: bloom 3.6s cubic-bezier(.2, .65, .3, 1) infinite;
+}
+.map__bloom circle:nth-child(2) { animation-delay: 1.2s; }
+.map__bloom circle:nth-child(3) { animation-delay: 2.4s; }
+html[data-alarm="on"] .map__bloom circle { animation-duration: 1.8s; }
+@keyframes bloom {
+  0% { transform: scale(.06); opacity: 0; }
+  12% { opacity: 1; }
+  100% { transform: scale(1); opacity: 0; }
+}
+@keyframes halo { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.35); } }
 
 /* ==========================================================================
-   9. KEUNGGULAN
+   9. SOLUSI & FITUR UNGGULAN
    ========================================================================== */
-.perks__title { max-width: 14ch; }
-.perks__grid {
-  margin-top: clamp(36px, 5vw, 72px);
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr) minmax(0, 1fr);
-  gap: clamp(24px, 3vw, 52px); align-items: center;
+.solution { padding-top: 0; }
+.solution__intro {
+  display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  gap: clamp(28px, 5vw, 88px); align-items: center;
 }
-.perk h3 { margin: 16px 0 8px; }
-.perk p { margin: 0; color: var(--ink-soft); }
+.solution__photo { margin: 0; }
+.solution__photo img { width: 100%; height: auto; border-radius: var(--radius-lg); }
+.solution__title { margin-bottom: 24px; max-width: 16ch; }
+.solution__intro p:last-child { margin-bottom: 0; color: var(--ink-soft); }
+
+.perks-grid {
+  margin-top: clamp(44px, 6vw, 80px);
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px 40px;
+}
+.perk h3 { margin: 14px 0 8px; }
+.perk p { margin: 0; color: var(--ink-soft); font-weight: 500; }
+.perk { border-top: 2px solid var(--divider); padding-top: 22px; }
 .perk__icon {
-  width: 52px; height: 52px; color: var(--crimson);
+  width: 48px; height: 48px; color: var(--crimson);
   fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
 }
-.perk--main { background: var(--paper); border-radius: var(--radius-md); padding: clamp(26px, 3vw, 40px); }
-.perk--main .perk__icon { width: 64px; height: 64px; color: var(--signal-strong); }
-.perk--main h3 { font-family: var(--font-display); font-weight: 400; font-size: 2.1rem; line-height: 1.05; color: var(--crimson); }
-.perk--main p { color: var(--ink); }
-.perks__photo { margin: 0; }
-.perks__photo img { width: 100%; height: auto; filter: drop-shadow(0 26px 30px rgba(120, 8, 18, 0.18)); }
-.perks__side { display: grid; gap: 36px; }
-.perks__side .perk { border-top: 2px solid var(--line); padding-top: 22px; }
 
 /* ==========================================================================
    10. VIEWER 3D
@@ -496,42 +558,43 @@ html:not(.js) .viewer__fallback { display: grid; }
 .sim { display: grid; justify-items: center; gap: 18px; }
 .sim__caption { margin: 0; min-height: 3.2em; max-width: 34ch; text-align: center; color: var(--ink-soft); }
 
-.sim-watch { position: relative; width: min(100%, 560px); aspect-ratio: 560 / 440; }
+.sim-watch { position: relative; width: min(100%, 520px); aspect-ratio: 520 / 560; }
+/* Jam tampil tegak seperti dipakai: tali jam di atas & bawah, tali penarik di kanan */
 .sim-watch__strap {
-  position: absolute; top: 13%; height: 30%; width: 23%;
-  background: linear-gradient(180deg, #EE3B23, #DA2A10);
+  position: absolute; left: 34.5%; width: 21%; height: 27%;
+  background: linear-gradient(90deg, #DA2A10, #EE3B23 45%, #DA2A10);
 }
-.sim-watch__strap--left {
-  left: -6%; border-radius: 0 10px 10px 0;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 60%); mask-image: linear-gradient(90deg, transparent 0%, #000 60%);
+.sim-watch__strap--left { /* tali atas */
+  top: -4%; border-radius: 0 0 10px 10px;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 60%); mask-image: linear-gradient(180deg, transparent 0%, #000 60%);
 }
-.sim-watch__strap--right {
-  right: -6%; border-radius: 10px 0 0 10px;
-  -webkit-mask-image: linear-gradient(270deg, transparent 0%, #000 60%); mask-image: linear-gradient(270deg, transparent 0%, #000 60%);
+.sim-watch__strap--right { /* tali bawah */
+  bottom: -4%; border-radius: 10px 10px 0 0;
+  -webkit-mask-image: linear-gradient(0deg, transparent 0%, #000 60%); mask-image: linear-gradient(0deg, transparent 0%, #000 60%);
 }
 .sim-watch__lug { /* penghubung tali berwarna krem */
-  position: absolute; top: 8%; height: 40%; width: 15%;
-  background: linear-gradient(180deg, #FDF8F1 0%, #EFE3D5 55%, #DCCBBA 100%);
+  position: absolute; left: 31%; width: 28%; height: 16%;
+  background: linear-gradient(90deg, #DCCBBA 0%, #FDF8F1 40%, #EFE3D5 70%, #DCCBBA 100%);
 }
-.sim-watch__lug--left { left: 13%; clip-path: polygon(0 12%, 100% 0, 100% 100%, 0 88%); }
-.sim-watch__lug--right { right: 13%; clip-path: polygon(0 0, 100% 12%, 100% 88%, 0 100%); }
+.sim-watch__lug--left { top: 18%; clip-path: polygon(12% 0, 88% 0, 100% 100%, 0 100%); }
+.sim-watch__lug--right { bottom: 18%; clip-path: polygon(0 0, 100% 0, 88% 100%, 12% 100%); }
 .sim-watch__case {
-  position: absolute; left: 27%; top: 3%;
-  width: 46%; aspect-ratio: 3.25 / 2.77; padding: 4.4%;
-  border-radius: 22% / 26%;
+  position: absolute; left: 28%; top: 31.5%;
+  width: 34%; aspect-ratio: 2.77 / 3.25; padding: 3.6%;
+  border-radius: 26% / 22%;
   background: linear-gradient(160deg, #F7767C 0%, #EE4D55 55%, #D93A44 100%);
   box-shadow: inset 0 -7px 0 rgba(150, 18, 28, 0.35), inset 0 3px 0 rgba(255, 255, 255, 0.35), 0 26px 40px rgba(120, 8, 18, 0.25);
 }
 .sim-watch__screen {
   position: relative; width: 100%; height: 100%; overflow: hidden;
-  border-radius: 18% / 21%;
+  border-radius: 21% / 18%;
   background: radial-gradient(120% 120% at 25% 0%, #2A1215 0%, #0A0304 62%);
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.55);
   color: #FFF4EA;
   container-type: inline-size;
 }
-/* tali penarik: sedikit ke kiri dari tengah (tampak depan), sama seperti model 3D */
-.sim-watch__cord { position: absolute; top: 52%; left: 43%; width: 7.4%; height: auto; transform: translateX(-50%); }
+/* tali penarik keluar dari sisi kanan jam, sama seperti model 3D */
+.sim-watch__cord { position: absolute; top: 50%; left: 61.5%; width: 31%; height: auto; transform: translateY(-50%); }
 
 .screen {
   position: absolute; inset: 0; padding: 8%;
@@ -542,8 +605,8 @@ html:not(.js) .viewer__fallback { display: grid; }
 .screen[hidden] { display: none; }
 @keyframes screen-in { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
 .screen p { margin: 0; }
-.screen__time { font-size: 26cqi; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-.screen__date { font-size: 6.4cqi; font-weight: 700; color: #FF9A92; }
+.screen__time { font-size: 30cqi; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.screen__date { font-size: 8cqi; font-weight: 700; color: #FF9A92; }
 .screen__big { font-size: 17cqi; font-weight: 800; letter-spacing: -0.01em; }
 .screen__title { font-size: 8.5cqi; font-weight: 800; }
 .screen__small { font-size: 5.8cqi; font-weight: 700; color: #FF9A92; }
@@ -590,40 +653,148 @@ html:not(.js) .viewer__fallback { display: grid; }
   display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
   gap: clamp(28px, 6vw, 104px); align-items: start;
 }
-.spec-list { margin: 0; border-top: 2px solid var(--line); }
+.spec-list { margin: 0; border-top: 2px solid var(--divider); }
 .spec {
   display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); gap: 8px 28px;
-  padding: 20px 0; border-bottom: 2px solid var(--line);
+  padding: 20px 0; border-bottom: 2px solid var(--divider);
 }
 .spec dt { font-weight: 800; color: var(--crimson); }
 .spec dd { margin: 0; }
 
+.specs__title { margin-bottom: 28px; }
+.specs__photo { margin: 0; }
+.specs__photo img { width: 100%; height: auto; border-radius: var(--radius-lg); }
+
+/* Interaksi foto: miring mengikuti kursor, foto sedikit membesar, bingkai merah muncul.
+   Atur kekuatannya lewat --photo-tilt di bawah. */
+.story__photo, .solution__photo, .specs__photo {
+  --photo-tilt: 6deg; --rx: 0deg; --ry: 0deg;
+  position: relative; perspective: 900px; cursor: pointer;
+}
+.story__photo picture, .solution__photo picture, .specs__photo picture {
+  display: block; position: relative; overflow: hidden; border-radius: var(--radius-lg);
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  box-shadow: 0 0 0 0 var(--crimson);
+  transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease;
+}
+.story__photo img, .solution__photo img, .specs__photo img {
+  display: block; transition: transform .6s cubic-bezier(.2,.7,.2,1), filter .4s ease;
+}
+.story__photo::after, .solution__photo::after, .specs__photo::after {
+  content: ""; position: absolute; inset: 0; border-radius: var(--radius-lg);
+  border: 3px solid var(--crimson); transform: translate(0, 0); opacity: 0; z-index: -1;
+  transition: transform .35s cubic-bezier(.2,.7,.2,1), opacity .25s ease;
+}
+.is-photo-active picture { box-shadow: 0 22px 40px -22px rgba(88, 0, 16, .55); }
+.is-photo-active img { transform: scale(1.06); filter: saturate(1.08); }
+.is-photo-active::after { opacity: 1; transform: translate(14px, 14px); }
+@media (prefers-reduced-motion: reduce) {
+  .story__photo picture, .solution__photo picture, .specs__photo picture { transform: none !important; }
+  .is-photo-active img { transform: none; }
+}
+
 /* ==========================================================================
-   13. TANYA JAWAB
+   12b. HARGA & PERBANDINGAN
    ========================================================================== */
-.faq { padding-top: 0; }
-.faq__grid {
-  display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
-  gap: clamp(28px, 6vw, 104px); align-items: start;
+.price { padding-top: 0; }
+.price__panel {
+  background: var(--paper); border-radius: var(--radius-lg);
+  padding: clamp(28px, 5vw, 72px);
+  display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.4fr);
+  gap: clamp(28px, 5vw, 72px); align-items: center;
 }
-.faq__title { position: sticky; top: calc(var(--header-h) + 32px); }
-.qa { border-bottom: 2px solid var(--line); }
-.qa:first-child { border-top: 2px solid var(--line); }
-.qa summary {
-  display: flex; align-items: center; justify-content: space-between; gap: 24px;
-  padding: 22px 0; cursor: pointer; list-style: none;
-  font-size: 1.3125rem; font-weight: 800; line-height: 1.35;
+.price__title { font-size: clamp(2.2rem, 1.4rem + 2.4vw, 3.4rem); }
+.price__tag {
+  margin: 22px 0 0; font-family: var(--font-display); color: var(--crimson);
+  font-size: clamp(3.4rem, 2rem + 4vw, 5.6rem); line-height: 1; letter-spacing: -0.01em;
 }
-.qa summary::-webkit-details-marker { display: none; }
-.qa summary::after {
-  content: ""; flex: none; width: 40px; height: 40px; border-radius: 50%;
-  background: rgba(166, 9, 20, 0.09) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A60914' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M12 6v12M6 12h12'/%3E%3C/svg%3E") center / 22px no-repeat;
+.price__currency { font-size: .45em; vertical-align: .9em; margin-right: .08em; }
+.price__cents { font-size: .4em; }
+.price__unit { margin: 10px 0 24px; color: var(--ink-soft); }
+.compare-wrap { overflow-x: auto; }
+.compare { width: 100%; border-collapse: collapse; font-size: 1.0625rem; line-height: 1.4; min-width: 560px; }
+.compare caption { text-align: left; font-weight: 800; font-size: 1.75rem; line-height: 1.2; margin-bottom: 16px; color: var(--ink); }
+.compare th, .compare td { text-align: left; vertical-align: top; padding: 14px 14px; border-bottom: 2px solid var(--divider); }
+.compare thead th { font-size: 1rem; color: var(--ink-soft); }
+.compare tbody th { font-weight: 800; color: var(--crimson); width: 22%; }
+.compare .compare__us { background: rgba(166, 9, 20, 0.07); font-weight: 700; }
+.compare thead .compare__us { background: var(--crimson); color: var(--cream); border-radius: 14px 14px 0 0; font-size: 1.0625rem; }
+
+/* ==========================================================================
+   12c. PEMBELIAN & PEMBAYARAN QRIS
+   ========================================================================== */
+.shop { padding-top: 0; }
+.shop__title { margin-bottom: clamp(24px, 4vw, 44px); }
+.product {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px); align-items: start;
 }
-.qa[open] summary::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A60914' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M6 12h12'/%3E%3C/svg%3E");
+.product__media {
+  background: radial-gradient(70% 60% at 50% 40%, #FFFFFF 0%, var(--paper) 70%);
+  border-radius: var(--radius-lg); padding: clamp(20px, 4vw, 48px);
+  display: grid; place-items: center;
 }
-.qa summary:hover { color: var(--crimson); }
-.qa p { margin: 0 0 24px; max-width: 60ch; color: var(--ink-soft); }
+.product__media img { width: min(100%, 440px); height: auto; }
+.product__info {
+  border: 2px solid var(--line); border-radius: var(--radius-lg);
+  padding: clamp(24px, 3.5vw, 40px); display: grid; gap: 22px; background: #FFFCF9;
+}
+.product__name { font-size: clamp(1.6rem, 1.2rem + 1vw, 2.1rem); line-height: 1.15; }
+.product__sub { margin: -12px 0 0; color: var(--ink-soft); }
+.product__field { border: 0; padding: 0; margin: 0; min-width: 0; }
+.product__field > label, .product__field legend { display: block; font-weight: 800; margin-bottom: 10px; padding: 0; }
+.product__field legend strong { color: var(--crimson); }
+.swatches { display: flex; gap: 12px; }
+.swatch { position: relative; cursor: pointer; }
+.swatch input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.swatch__dot { display: block; width: 48px; height: 48px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 2px var(--line); }
+.swatch__dot--merah { background: #E3301B; }
+.swatch input:checked + .swatch__dot { box-shadow: 0 0 0 3px var(--ink); }
+.swatch input:focus-visible + .swatch__dot { outline: 3px solid var(--signal); outline-offset: 4px; }
+.qty { display: inline-flex; align-items: center; border: 2px solid rgba(43, 12, 15, 0.28); border-radius: 999px; background: #fff; }
+.qty__btn {
+  width: 56px; height: 56px; border: 0; border-radius: 50%; background: transparent; cursor: pointer;
+  display: grid; place-items: center; color: var(--crimson);
+}
+.qty__btn .icon { width: 26px; height: 26px; stroke-width: 2.6; }
+.qty__btn:hover:not(:disabled) { background: rgba(166, 9, 20, 0.08); }
+.qty__btn:disabled { color: #B9A9A7; cursor: not-allowed; }
+.qty input {
+  width: 72px; height: 56px; border: 0; background: transparent; text-align: center;
+  font: inherit; font-size: 1.5rem; font-weight: 800; color: var(--ink); -moz-appearance: textfield; appearance: textfield;
+}
+.qty input::-webkit-outer-spin-button, .qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.product__hint { margin: 8px 0 0; font-size: 1rem; color: var(--ink-soft); }
+.product__price { border-top: 2px solid var(--divider); padding-top: 16px; display: grid; gap: 6px; }
+.product__price p { margin: 0; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.product__price span { color: var(--ink-soft); }
+.product__total strong { font-family: var(--font-display); font-weight: 400; font-size: 2.4rem; line-height: 1.1; color: var(--crimson); }
+.btn--buy { min-height: 3.75rem; font-size: 1.3rem; }
+.product__pay { margin: 0; display: flex; gap: 10px; align-items: flex-start; font-size: 1rem; color: var(--ink-soft); }
+.product__pay .icon { color: var(--crimson); width: 24px; height: 24px; }
+
+.pay {
+  width: min(520px, calc(100vw - 24px)); max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px);
+  padding: 0; border: 0; border-radius: var(--radius-md); background: var(--paper); color: var(--ink);
+  box-shadow: 0 40px 80px rgba(30, 4, 6, 0.4); overflow: auto;
+}
+.pay::backdrop { background: rgba(30, 4, 6, 0.62); }
+.pay.is-fallback-open { position: fixed; inset: 12px; margin: auto; z-index: 100; display: block; }
+html.pay-open { overflow: hidden; }
+.pay__inner { position: relative; padding: clamp(22px, 4vw, 36px); display: grid; gap: 18px; }
+.pay__close {
+  position: absolute; top: 14px; right: 14px; width: 48px; height: 48px; border-radius: 50%; cursor: pointer;
+  border: 2px solid var(--line); background: #fff; display: grid; place-items: center; color: var(--ink);
+}
+.pay__close .icon { width: 24px; height: 24px; }
+.pay__title { font-family: var(--font-display); font-weight: 400; font-size: 2rem; line-height: 1.1; color: var(--crimson); padding-right: 56px; }
+.pay__summary { display: grid; gap: 6px; padding: 14px 18px; border-radius: var(--radius-sm); background: #fff; }
+.pay__summary p { margin: 0; display: flex; justify-content: space-between; gap: 16px; }
+.pay__summary span { color: var(--ink-soft); }
+.pay__total strong { font-size: 1.5rem; color: var(--crimson); }
+.pay__qr { width: min(100%, 340px); height: auto; justify-self: center; border-radius: 16px; box-shadow: 0 10px 30px rgba(43, 12, 15, 0.15); }
+.pay__steps { margin: 0; padding-left: 1.4em; display: grid; gap: 6px; font-size: 1.0625rem; }
+.pay__note { margin: 0; font-size: 1rem; color: var(--ink-soft); text-align: center; }
 
 /* ==========================================================================
    14. KONTAK
@@ -642,6 +813,8 @@ html:not(.js) .viewer__fallback { display: grid; }
 }
 .contact-list a:hover [data-contact-text] { text-decoration: underline; text-decoration-thickness: 2px; }
 .contact-list .icon { width: 52px; height: 52px; padding: 12px; border-radius: 50%; background: rgba(239, 230, 221, 0.14); }
+.contact-list__plain { display: inline-flex; align-items: center; gap: 16px; padding: 10px 0; color: var(--cream); font-size: 1.25rem; font-weight: 800; }
+.contact-list__plain .icon { width: 52px; height: 52px; padding: 12px; border-radius: 50%; background: rgba(239, 230, 221, 0.14); }
 .contact-list small { display: block; font-size: 1rem; font-weight: 400; color: rgba(239, 230, 221, 0.92); }
 
 .contact-form {
@@ -661,6 +834,7 @@ html:not(.js) .viewer__fallback { display: grid; }
 .field [aria-invalid="true"] { border-color: var(--signal-strong); }
 .field__error { margin: 8px 0 0; color: #B3140A; font-size: 1.0625rem; font-weight: 700; }
 .contact-form__note { margin: 0; font-size: 1rem; color: var(--ink-soft); text-align: center; }
+.contact-form__note a { font-weight: 800; }
 
 /* ==========================================================================
    15. FOOTER
@@ -697,12 +871,14 @@ html:not(.js) .viewer__fallback { display: grid; }
 }
 
 @media (max-width: 960px) {
-  .hero__top, .about__grid, .how__panel, .viewer__head, .features__head,
-  .features__grid, .specs__grid, .faq__grid, .contact__grid { grid-template-columns: minmax(0, 1fr); }
-  .hero__lead { max-width: 40ch; }
-  .perks__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .perks__photo { grid-column: 1 / -1; grid-row: 1; max-width: 520px; justify-self: center; }
-  .faq__title { position: static; }
+  .hero__top, .problem__intro, .story, .solution__intro, .how__panel, .viewer__head, .features__head,
+  .features__grid, .specs__grid, .price__panel, .product, .contact__grid { grid-template-columns: minmax(0, 1fr); }
+  .quickfacts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stat, .stat + .stat { padding: 22px 20px 24px 0; border-left: 0; }
+  .stat:nth-child(even) { padding-left: 20px; border-left: 2px solid var(--divider); }
+  .perks-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .solution__photo, .story__photo { max-width: 560px; }
   .viewer__stage { aspect-ratio: 4 / 3; }
   .sim { order: -1; }
   .sim-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -720,7 +896,9 @@ html:not(.js) .viewer__fallback { display: grid; }
   .how__panel { border-radius: var(--radius-md); }
   .steps__item { grid-template-columns: 52px minmax(0, 1fr); gap: 16px; }
   .steps__num { width: 52px; height: 52px; font-size: 1.6rem; }
-  .perks__grid { grid-template-columns: minmax(0, 1fr); }
+  .perks-grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .chain li { font-size: 1rem; }
+  .chain li + li::before { display: none; }
   .viewer__stage { aspect-ratio: 4 / 5; max-height: 76vh; border-radius: var(--radius-md); }
   .viewer__controls { flex-direction: column; align-items: stretch; }
   .viewer__views { display: flex; }
@@ -737,8 +915,12 @@ html:not(.js) .viewer__fallback { display: grid; }
   .sim-tab[aria-selected="true"] { border-color: var(--crimson); }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   .hero__actions .btn { flex: 1 1 100%; }
+  .quickfacts { grid-template-columns: minmax(0, 1fr); }
+  .stats { grid-template-columns: minmax(0, 1fr); }
+  .stat:nth-child(even) { padding-left: 0; border-left: 0; }
+  .product__total strong { font-size: 2rem; }
 }
 
 /* ==========================================================================
@@ -747,7 +929,56 @@ html:not(.js) .viewer__fallback { display: grid; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  html[data-alarm="on"] .band__rings span { opacity: .55; transform: scale(.3); }
-  html[data-alarm="on"] .band__rings span:nth-child(2) { opacity: .35; transform: scale(.5); }
-  html[data-alarm="on"] .band__rings span:nth-child(3) { opacity: .2; transform: scale(.7); }
+  .map__bloom circle { opacity: .5; transform: scale(.33); }
+  .map__bloom circle:nth-child(2) { opacity: .35; transform: scale(.66); }
+  .map__bloom circle:nth-child(3) { opacity: .2; transform: scale(.9); }
 }
+
+/* ==========================================================================
+   18. SUBJUDUL, HOVER, TALI INTERAKTIF, SDG's (revisi)
+   ========================================================================== */
+.product__name, .quickfacts strong, .about__subtitle { font-family: var(--font-sub); font-weight: 600; }
+.product__name { font-size: clamp(1.7rem, 1.3rem + 1vw, 2.2rem); }
+.steps h3 { color: #FFF8F2; }
+
+/* rantai masalah: menebal merah saat disentuh kursor */
+.chain li { cursor: default; transition: background-color .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease; }
+.chain li:hover { background: var(--crimson); color: var(--cream); transform: translateY(-3px); box-shadow: 0 10px 18px rgba(166, 8, 22, 0.25); }
+
+/* fitur unggulan: latar berubah saat disentuh kursor */
+.perk { border: 2px solid transparent; border-top-color: var(--divider); border-radius: 0; padding: 24px;
+  transition: background-color .25s ease, border-color .25s ease, border-radius .25s ease, transform .25s ease, box-shadow .25s ease, color .25s ease; }
+.perk:hover { background: var(--paper); border-color: var(--crimson); border-radius: var(--radius-md); transform: translateY(-4px); box-shadow: 0 18px 30px rgba(88, 0, 16, 0.12); }
+.perk__icon { transition: transform .25s ease, color .25s ease; }
+.perk:hover .perk__icon { transform: scale(1.12); color: var(--crimson); }
+
+/* tali yang bisa ditarik (jam simulator & foto produk) */
+.pull-handle {
+  position: absolute; border: 0; padding: 0; background: transparent; border-radius: 30px;
+  cursor: grab; touch-action: none; -webkit-tap-highlight-color: transparent;
+}
+[data-pullcord].is-dragging .pull-handle { cursor: grabbing; }
+.pull-handle:focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
+.sim-watch__pull { position: absolute; top: 50%; left: 61.5%; width: 31%; transform: translateY(-50%); }
+.sim-watch__pull .sim-watch__cord { position: static; display: block; width: 100%; transform: none; overflow: visible; }
+.sim-watch__pull .pull-handle { left: 6%; top: 50%; width: 92%; height: max(48px, 160%); transform: translate(0, -50%); cursor: ew-resize; }
+.product__pull { position: relative; width: min(100%, 520px); margin: 0 auto 40px; }
+.product__pull img { width: 100%; height: auto; }
+.product__cord { position: absolute; left: 0; top: 0; width: 100%; height: auto; overflow: visible; pointer-events: none; }
+.pull-handle--product { left: calc(382 / 720 * 100%); top: calc(437 / 783 * 100%); width: calc(195 / 720 * 100%); height: max(56px, calc(70 / 783 * 100%)); transform: translate(0, -50%); cursor: ew-resize; }
+[data-pullcord].is-dragging .pull-handle--product { cursor: ew-resize; }
+.cord__thread--thick { stroke-width: 2.2; }
+.cord__loop-edge--big { stroke-width: 12; }
+.cord__loop--big { stroke-width: 9; }
+.product__try { margin: 14px 0 0; text-align: center; font-weight: 600; font-size: 1rem; color: var(--crimson); }
+.product__media { display: block; }
+
+/* logo di tabel perbandingan */
+.compare__logo { width: 104px; height: auto; display: block; margin: 0 auto; }
+.compare thead .compare__us { text-align: center; vertical-align: middle; }
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-alarm="on"] .band__rings span { opacity: .55; transform: scale(.3); }
+}
+
+.compare caption { font-family: var(--font-text); font-weight: 800; }

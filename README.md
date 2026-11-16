@@ -30,7 +30,8 @@ watchout-website/
 ├── js/
 │   ├── config.js            PENGATURAN: kontak, alarm, viewer 3D  ← paling sering diedit
 │   ├── alarm.js             suara sirene simulasi
-│   ├── cord-demo.js         demo tarik tali di bagian atas halaman
+│   ├── shop.js              pembelian: jumlah, total harga, jendela QRIS
+│   ├── pull-cord.js         tali yang bisa ditarik (hero, jam simulator, foto produk)
 │   ├── viewer3d.js          viewer model 3D
 │   ├── features.js          simulator layar jam (bagian "Fitur")
 │   └── main.js              menu, ukuran teks, formulir WhatsApp
@@ -56,13 +57,13 @@ Buka **js/config.js**, bagian `contact`:
 contact: {
   whatsapp: '6281200000000',          // 62 + nomor tanpa angka 0 di depan
   whatsappLabel: '+62 812-0000-0000', // cara nomor ditampilkan
-  email: 'halo@watchout.id',
-  instagram: 'watchout.id',           // tanpa tanda @
+  email: '',                          // kosong = disembunyikan
+  instagram: 'watch0ut09',            // tanpa tanda @
   whatsappGreeting: 'Halo WatchOut!, saya ingin bertanya tentang jam WatchOut!.'
 }
 ```
 
-Semua kontak di atas masih **contoh**. Ganti dengan kontak asli tim. Data ini otomatis muncul di bagian
+Nomor WhatsApp masih **contoh**. Ganti dengan nomor asli toko (nomor ini juga dipakai untuk konfirmasi pembayaran QRIS). Data ini otomatis muncul di bagian
 "Hubungi kami" dan dipakai oleh formulir yang membuka WhatsApp. Jika salah satu dikosongkan (`''`),
 barisnya otomatis disembunyikan.
 
@@ -73,20 +74,22 @@ barisnya otomatis disembunyikan.
 | Ingin mengubah… | Buka file | Caranya |
 |---|---|---|
 | Teks judul, paragraf, tombol | `index.html` | Tekan Ctrl+F, cari teksnya, lalu ganti. Setiap bagian diberi penanda komentar seperti `<!-- HERO -->`, `<!-- CARA KERJA -->`. |
-| Pertanyaan di "Tanya jawab" | `index.html` | Salin satu blok `<details class="qa">…</details>`, lalu ubah pertanyaan & jawabannya. |
 | Baris spesifikasi | `index.html` | Salin satu baris `<div class="spec">…</div>`. Bila datanya sudah ada, sebaiknya tambahkan baterai, berat, ukuran, tingkat tahan air (IP), dan kekerasan alarm (dB). |
 | Warna | `css/style.css` | Bagian `:root` di paling atas. Contoh: `--crimson: #A60914;` adalah merah logo. |
 | Font | `index.html` + `css/style.css` | Ganti link Google Fonts di `<head>` lalu ubah `--font-display` dan `--font-text`. |
 | Keterangan tombol viewer 3D | `index.html` | Bagian `#lihat-3d`, atribut `data-caption="…"` di tiap tombol. |
 | Isi layar jam di bagian "Fitur" | `index.html` | Bagian `#fitur`. Isi tiap layar ada di blok `data-sim-panel`, keterangannya di `data-caption` tombol. |
+| Harga & jumlah maksimal pembelian | `js/config.js` | Bagian `shop`: `price` dan `maxQty`. Ubah juga teks harga di `index.html` (cari "289.000"). |
+| Gambar QRIS | `assets/img/` | Ganti file `qris-watchout.jpg` dengan nama yang sama. |
 | Volume / lama alarm simulasi | `js/config.js` | Bagian `alarm`: `volume` (0–1) dan `durationSeconds`. |
 | Warna & kilap model 3D | `js/config.js` | Bagian `viewer.materials`: `color` (HEX) dan `roughness` (0 = mengilap, 1 = doff). |
 | Putaran otomatis model 3D | `js/config.js` | `autoRotate: true/false` dan `autoRotateSpeed`. |
 
 **Mengganti gambar:** simpan gambar baru di `assets/img/` dengan nama file yang sama, lalu ganti juga
 versi `.webp`-nya (atau hapus baris `<source … .webp>` di index.html agar memakai `.png`).
-Gambar jam di bagian atas (`watchout-band`) berukuran 1435 × 215 piksel dan **tanpa tali**, karena
-talinya digambar oleh kode supaya bisa ditarik. Jika ukurannya berubah, sesuaikan angka di `js/cord-demo.js`.
+Gambar jam di bagian atas (`watchout-band`) adalah mockup asli tim (1435 × 215 piksel) **tanpa tali**; talinya digambar dengan SVG di `index.html` supaya bisa ditarik. Foto produk (`watchout-product`, jam berdiri tegak dengan tali jam melingkar) juga tanpa tali penarik karena alasan yang sama; talinya ditarik ke kanan (`data-axis="x"`).
+
+Di tampilan 3D, jam diputar supaya layarnya tegak seperti saat dipakai. Sudutnya diatur lewat `roll` di `js/config.js` (90 = layar tegak, tali penarik di kanan; 0 = posisi asli file 3D). Foto-foto di halaman miring mengikuti kursor; kekuatannya diatur lewat `--photo-tilt` di `css/style.css`.
 
 ---
 
@@ -115,6 +118,11 @@ Catatan tentang model saat ini:
 
 ## 6. Fitur ramah lansia
 
+- **Font:** Bagel Fat One (judul), Beatrix Antiqua (subjudul), dan Poppins (teks biasa). Beatrix Antiqua
+  adalah font berlisensi dari Zetafonts dan tidak tersedia di Google Fonts. Setelah tim memiliki lisensinya,
+  simpan filenya sebagai `assets/fonts/BeatrixAntiqua-Regular.woff2` (atau `.ttf`), dan website otomatis
+  memakainya. Sebelum itu, subjudul memakai font Marcellus dari Google Fonts.
+- **Warna:** judul & elemen `#A60816`, latar `#EFE6DD`, teks biasa & subjudul `#580010` (lihat `:root` di `css/style.css`).
 - **Tombol ukuran teks** (A / A / A) di menu memperbesar seluruh teks; pilihannya diingat browser.
 - Font **Atkinson Hyperlegible Next** dirancang khusus agar mudah dibaca orang dengan penglihatan lemah.
 - Teks dasar 20 px, tombol besar (minimal 48 px), dan kontras warna memenuhi standar keterbacaan (WCAG AA).
@@ -143,6 +151,6 @@ Beberapa isi masih berupa contoh dan sebaiknya disesuaikan:
 - Kontak di `js/config.js` (lihat bagian 3).
 - Tampilan layar di simulator fitur: suhu "29°", jalan "Jl. Melati", lagu "Lagu kenangan",
   dan pengingat "06:30 Minum obat pagi". Semuanya hanya ilustrasi tampilan.
-- Klaim produk mengikuti brief tim: jangkauan suara ±200 meter, tahan air, desain ramah lansia dan ringan.
-  Contoh pemakaian "cuci tangan, wudu, atau kehujanan" ada di bagian Keunggulan dan Tanya jawab;
-  sesuaikan bila tingkat tahan airnya berbeda.
+- Data statistik, kutipan Oma Halimah, perbandingan kompetitor, harga, dan spesifikasi diambil dari
+  proposal dan pitch deck WatchOut!.
+- QRIS yang dipakai atas nama merchant "NEXUS STORE". QRIS ini statis, jadi pembeli mengetik nominal sendiri.
