@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="id" data-alarm="off" data-sound="on" data-text-size="0">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- ===================== JUDUL & DESKRIPSI (muncul di Google & tab browser) ===================== -->
+  <title>WatchOut! | Jam Alarm Darurat untuk Lansia</title>
+  <meta name="description" content="WatchOut! adalah jam digital dengan tali penarik alarm darurat untuk lansia. Tarik talinya, suara kencang terdengar hingga ±200 meter untuk memanggil bantuan.">
+  <meta name="theme-color" content="#A60914">
+
+  <!-- Tampilan saat link dibagikan di WhatsApp / media sosial.
+       Setelah website online, ganti "assets/img/og-image.jpg" dengan alamat lengkap,
+       contoh: https://namadomainanda.com/assets/img/og-image.jpg -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="WatchOut! | Your Safety, Our Priority!">
+  <meta property="og:description" content="Jam digital dengan tali alarm darurat untuk lansia. Satu tarikan, suara kencang hingga ±200 meter.">
+  <meta property="og:image" content="assets/img/og-image.jpg">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/img/favicon-192.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+  <!-- Font: Bagel Fat One (judul) & Atkinson Hyperlegible Next (teks, dirancang agar mudah dibaca
+       orang dengan penglihatan lemah). Butuh internet; tanpa internet memakai font cadangan. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400..800&family=Bagel+Fat+One&display=swap">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Menerapkan pilihan ukuran teks & suara yang tersimpan sebelum halaman tampil -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('watchout-text-size');
+        if (t) document.documentElement.setAttribute('data-text-size', t);
+        if (localStorage.getItem('watchout-sound') === 'off') document.documentElement.setAttribute('data-sound', 'off');
+      } catch (e) {}
+      document.documentElement.classList.add('js');
+    })();
+  </script>
+</head>
+
+<body>
+  <!-- Ikon-ikon (dipakai ulang di seluruh halaman lewat <use href="#nama-ikon">) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="13" r="7.5"/><path d="M12 9.3V13l2.6 1.8M4.6 4.6 2.8 6.4M19.4 4.6l1.8 1.8"/></symbol>
+      <symbol id="i-weather" viewBox="0 0 24 24"><path d="M7.5 2.8v1.4M2.8 7.5h1.4M4.2 4.2l1 1M10.8 4.2l-1 1"/><path d="M5.4 10.6a3.3 3.3 0 1 1 5.5-3.3"/><path d="M8.8 20.5h8.4a3.8 3.8 0 0 0 .4-7.6 5 5 0 0 0-9.4 1.3 3.2 3.2 0 0 0 .6 6.3Z"/></symbol>
+      <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5.8l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="15.8" r="2.5"/></symbol>
+      <symbol id="i-phone" viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="18" rx="2.2"/><path d="M11.2 17.8h1.6M4.8 8.6a5.6 5.6 0 0 0 0 6.8M19.2 8.6a5.6 5.6 0 0 1 0 6.8"/></symbol>
+      <symbol id="i-nav" viewBox="0 0 24 24"><path d="M12 2.8 19 20.4l-7-3.7-7 3.7Z"/></symbol>
+      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16.2v-5a6 6 0 0 1 12 0v5l1.6 2.1H4.4Z"/><path d="M10 21a2.1 2.1 0 0 0 4 0"/></symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.4 21.6 20H2.4Z"/><path d="M12 10v4.4M12 17.2v.2"/></symbol>
+      <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6.2 6.7 6.2 11.2a6.2 6.2 0 0 1-12.4 0C5.8 9.7 12 3 12 3Z"/><path d="M9 14.6a3 3 0 0 0 2.8 2.9"/></symbol>
+      <symbol id="i-feather" viewBox="0 0 24 24"><path d="M20 4c-7.2 0-12.6 5-13 13 7.8-.4 13-5.8 13-13Z"/><path d="M3.8 20.2 13 11"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m4.8 12.6 4.6 4.6L19.2 7.4"/></symbol>
+      <symbol id="i-sound-on" viewBox="0 0 24 24"><path d="M3.8 9.4h3.6L12 5.4v13.2l-4.6-4H3.8Z"/><path d="M15.4 9a4.2 4.2 0 0 1 0 6M18 6.4a7.8 7.8 0 0 1 0 11.2"/></symbol>
+      <symbol id="i-sound-off" viewBox="0 0 24 24"><path d="M3.8 9.4h3.6L12 5.4v13.2l-4.6-4H3.8Z"/><path d="m15.8 9.6 4.8 4.8M20.6 9.6l-4.8 4.8"/></symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+      <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M19.8 12.6a8 8 0 1 1-2.2-6.3"/><path d="M18.6 3v4.2h-4.2"/></symbol>
+      <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4.2 12.6a8 8 0 1 0 2.2-6.3"/><path d="M5.4 3v4.2h4.2"/></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+      <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+      <symbol id="i-drag" viewBox="0 0 24 24"><path d="M3 12h18M3 12l3-3M3 12l3 3M21 12l-3-3M21 12l-3 3"/></symbol>
+      <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M4.2 20.2 5.4 16.4a8.4 8.4 0 1 1 3 2.8Z"/><path d="M9.3 8.3c.3-.6.9-.6 1.1-.1l.6 1.4c.1.3 0 .6-.2.8l-.5.5a6.4 6.4 0 0 0 2.8 2.8l.5-.5c.2-.2.5-.3.8-.2l1.4.6c.5.2.5.8-.1 1.1-1.3.8-2.8.4-4.6-1.4S8.5 9.6 9.3 8.3Z"/></symbol>
+      <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/></symbol>
+      <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.2 6.8h.01"/></symbol>
+    </defs>
+  </svg>
+
+  <a class="skip-link" href="#konten">Lewati ke konten utama</a>
+
+  <!-- ============================================================
+       HEADER / MENU
+       ============================================================ -->
+  <header class="site-header" data-header>
+    <div class="site-header__inner">
+      <a class="brand" href="#beranda" aria-label="WatchOut!, kembali ke atas">
+        <img src="assets/img/logo-watchout.png" alt="WatchOut!" width="1003" height="498">
+      </a>
+
+      <nav class="site-nav" id="menu-utama" aria-label="Menu utama" data-menu>
+        <ul class="site-nav__list" data-nav>
+          <li><a href="#cara-kerja">Cara kerja</a></li>
+          <li><a href="#keunggulan">Keunggulan</a></li>
+          <li><a href="#lihat-3d">Lihat 3D</a></li>
+          <li><a href="#fitur">Fitur</a></li>
+          <li><a href="#tanya-jawab">Tanya jawab</a></li>
+        </ul>
+        <div class="site-nav__extra">
+          <div class="textsize" role="group" aria-label="Ukuran teks">
+            <span class="textsize__label" aria-hidden="true">Ukuran teks</span>
+            <button type="button" data-text-size-set="0" aria-pressed="true" aria-label="Teks normal"><span>A</span></button>
+            <button type="button" data-text-size-set="1" aria-pressed="false" aria-label="Teks besar"><span>A</span></button>
+            <button type="button" data-text-size-set="2" aria-pressed="false" aria-label="Teks sangat besar"><span>A</span></button>
+          </div>
+          <a class="btn btn--primary btn--nav" href="#kontak">Hubungi kami</a>
+        </div>
+      </nav>
+
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu-utama" data-menu-toggle>
+        <svg class="icon icon--open" aria-hidden="true"><use href="#i-menu"/></svg>
+        <svg class="icon icon--close" aria-hidden="true"><use href="#i-close"/></svg>
+        <span>Menu</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="konten">
+
+    <!-- ============================================================
+         HERO: judul + demo tarik tali
+         Gambar jam: assets/img/watchout-band.webp (+ .png cadangan)
+         ============================================================ -->
+    <section class="hero" id="beranda" aria-labelledby="hero-title">
+      <div class="container hero__top">
+        <h1 class="hero__title" id="hero-title" lang="en">
+          <span>Your Safety,</span>
+          <span>Our Priority!</span>
+        </h1>
+        <div class="hero__intro">
+          <p class="hero__lead">
+            WatchOut! adalah jam digital dengan tali alarm darurat untuk lansia.
+            Saat terjatuh atau dalam bahaya, cukup tarik talinya. Suara kencang
+            terdengar hingga ±200 meter dan memanggil orang di sekitar.
+          </p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="#kontak">Hubungi kami</a>
+            <a class="btn btn--ghost" href="#cara-kerja">Lihat cara kerja</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__stage">
+        <div class="band" data-cord-demo>
+          <div class="band__figure">
+            <picture>
+              <source srcset="assets/img/watchout-band.webp" type="image/webp">
+              <img class="band__img" src="assets/img/watchout-band.png" width="1435" height="215"
+                   alt="Jam WatchOut! berwarna merah dengan logo WatchOut! di bagian belakang">
+            </picture>
+
+            <!-- gelombang suara saat alarm berbunyi -->
+            <div class="band__rings" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
+            <!-- tali penarik (digambar ulang agar bisa ditarik) -->
+            <svg class="band__cord" viewBox="0 0 1435 600" aria-hidden="true" focusable="false">
+              <path class="cord__thread" data-cord-thread d="M744.6 199 L742.3 229 M748.4 199 L750.7 229"/>
+              <g data-cord-lower>
+                <path class="cord__loop-edge" d="M746.5 296 C742 326 730.5 374 730.8 405 C731 424 740 432.5 746.5 432.5 C753 432.5 762 424 762.2 405 C762.5 374 751 326 746.5 296 Z"/>
+                <path class="cord__loop" d="M746.5 296 C742 326 730.5 374 730.8 405 C731 424 740 432.5 746.5 432.5 C753 432.5 762 424 762.2 405 C762.5 374 751 326 746.5 296 Z"/>
+                <rect class="cord__band" x="742" y="234" width="9" height="68" rx="2.5"/>
+                <path class="cord__mark" d="M744.8 249.5l4 2.1-4 2.1Z"/>
+                <rect class="cord__cap" x="737.6" y="228" width="17.8" height="9" rx="3.2"/>
+                <rect class="cord__shine" x="739.6" y="229.7" width="13.8" height="2.1" rx="1"/>
+              </g>
+            </svg>
+
+            <button class="band__handle" type="button" data-cord-handle aria-describedby="cord-hint-text">
+              <span class="visually-hidden">Tarik tali alarm (simulasi)</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="cord-hint" id="cord-hint">
+          <svg class="cord-hint__arrow" viewBox="0 0 120 70" aria-hidden="true" focusable="false">
+            <path d="M114 8C90 6 52 14 28 48"/><path d="M22 30l4 22 20-8"/>
+          </svg>
+          <p class="cord-hint__title">
+            <span data-when-alarm="off">Coba tarik talinya</span>
+            <span data-when-alarm="on">Alarm berbunyi!</span>
+          </p>
+          <p class="cord-hint__text" id="cord-hint-text">
+            <span data-when-alarm="off">Geser tali ke bawah untuk mendengar bunyi alarmnya.</span>
+            <span data-when-alarm="on">Orang di sekitar hingga ±200 meter dapat mendengarnya.</span>
+          </p>
+          <p class="visually-hidden" aria-live="polite" data-alarm-status
+             data-text-on="Alarm simulasi berbunyi. Orang di sekitar hingga 200 meter dapat mendengarnya."
+             data-text-off=""></p>
+          <div class="cord-hint__actions">
+            <button class="btn btn--small btn--alarm" type="button" data-alarm-toggle data-alarm-source="hero" aria-pressed="false">
+              <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+              <span data-when-alarm="off">Bunyikan alarm</span>
+              <span data-when-alarm="on">Matikan alarm</span>
+            </button>
+            <button class="btn btn--small btn--quiet" type="button" data-sound-toggle aria-pressed="true">
+              <svg class="icon" data-when-sound="on" aria-hidden="true"><use href="#i-sound-on"/></svg>
+              <svg class="icon" data-when-sound="off" aria-hidden="true"><use href="#i-sound-off"/></svg>
+              <span data-when-sound="on">Suara aktif</span>
+              <span data-when-sound="off">Suara mati</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         TENTANG: masalah yang diselesaikan
+         ============================================================ -->
+    <section class="section about" id="tentang" aria-labelledby="about-title">
+      <div class="container about__grid">
+        <h2 class="display about__title" id="about-title">Saat terjatuh, ponsel sering tak terjangkau.</h2>
+        <div class="about__body">
+          <p class="lead">
+            Banyak lansia beraktivitas sendiri: di rumah, di kebun, atau saat berjalan ke warung.
+            Ketika terjatuh atau merasa terancam, mengambil ponsel lalu menelepon bisa terasa sulit.
+            WatchOut! selalu ada di pergelangan tangan, jadi meminta tolong cukup dengan satu tarikan.
+          </p>
+          <h3 class="about__subtitle">Dibuat untuk</h3>
+          <ul class="checklist">
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Lansia yang sering di rumah sendirian</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Lansia yang masih aktif beraktivitas di luar rumah</li>
+            <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>Keluarga yang ingin lebih tenang saat berjauhan</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CARA KERJA: 3 langkah + ilustrasi jangkauan suara
+         ============================================================ -->
+    <section class="section how" id="cara-kerja" aria-labelledby="how-title">
+      <div class="container">
+        <div class="how__panel">
+          <div class="how__text">
+            <h2 class="display how__title" id="how-title">Satu tarikan untuk memanggil bantuan.</h2>
+            <ol class="steps">
+              <li class="steps__item">
+                <span class="steps__num" aria-hidden="true">1</span>
+                <div>
+                  <h3>Tarik talinya</h3>
+                  <p>Tali menggantung di sisi jam, mudah diraih dengan tangan yang lain.</p>
+                </div>
+              </li>
+              <li class="steps__item">
+                <span class="steps__num" aria-hidden="true">2</span>
+                <div>
+                  <h3>Alarm berbunyi kencang</h3>
+                  <p>Suara keras terdengar hingga sekitar 200 meter dan menarik perhatian orang di sekitar.</p>
+                </div>
+              </li>
+              <li class="steps__item">
+                <span class="steps__num" aria-hidden="true">3</span>
+                <div>
+                  <h3>Bantuan datang</h3>
+                  <p>Tetangga, keluarga, atau orang yang lewat tahu ada yang butuh pertolongan.</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <figure class="how__map">
+            <svg viewBox="0 0 480 480" role="img" aria-labelledby="map-title">
+              <title id="map-title">Ilustrasi jangkauan suara alarm WatchOut! hingga sekitar 200 meter dari pengguna</title>
+              <defs>
+                <clipPath id="map-clip"><rect width="480" height="480" rx="36"/></clipPath>
+                <radialGradient id="map-reach">
+                  <stop offset="0" stop-color="#EFE6DD" stop-opacity=".26"/>
+                  <stop offset="1" stop-color="#EFE6DD" stop-opacity=".06"/>
+                </radialGradient>
+              </defs>
+              <g clip-path="url(#map-clip)">
+                <rect width="480" height="480" class="map__ground"/>
+                <g class="map__blocks">
+                  <rect x="-20" y="-20" width="96" height="88" rx="10"/><rect x="92" y="-20" width="124" height="88" rx="10"/>
+                  <rect x="232" y="-20" width="70" height="88" rx="10"/><rect x="318" y="-20" width="182" height="64" rx="10"/>
+                  <rect x="318" y="60" width="88" height="70" rx="10"/><rect x="422" y="60" width="78" height="150" rx="10"/>
+                  <rect x="-20" y="84" width="96" height="120" rx="10"/><rect x="92" y="84" width="58" height="62" rx="10"/>
+                  <rect x="166" y="84" width="136" height="62" rx="10"/><rect x="92" y="162" width="104" height="96" rx="10"/>
+                  <rect x="280" y="146" width="126" height="64" rx="10"/><rect x="-20" y="220" width="96" height="96" rx="10"/>
+                  <rect x="300" y="226" width="106" height="98" rx="10"/><rect x="422" y="226" width="78" height="98" rx="10"/>
+                  <rect x="-20" y="332" width="150" height="72" rx="10"/><rect x="146" y="274" width="96" height="130" rx="10"/>
+                  <rect x="258" y="340" width="148" height="64" rx="10"/><rect x="422" y="340" width="78" height="160" rx="10"/>
+                  <rect x="-20" y="420" width="196" height="80" rx="10"/><rect x="192" y="420" width="214" height="80" rx="10"/>
+                </g>
+                <circle cx="240" cy="240" r="200" fill="url(#map-reach)"/>
+                <g class="map__rings">
+                  <circle class="map__ring" cx="240" cy="240" r="66"/>
+                  <circle class="map__ring" cx="240" cy="240" r="132"/>
+                  <circle class="map__ring map__ring--outer" cx="240" cy="240" r="200"/>
+                </g>
+                <circle class="map__you-halo" cx="240" cy="240" r="22"/>
+                <circle class="map__you" cx="240" cy="240" r="11"/>
+                <g class="map__label" transform="translate(404 126)">
+                  <rect x="-50" y="-20" width="100" height="40" rx="20"/>
+                  <text x="0" y="7" text-anchor="middle">±200 m</text>
+                </g>
+              </g>
+            </svg>
+            <figcaption>Ilustrasi jangkauan suara. Jarak sebenarnya bisa berbeda, tergantung keramaian dan bangunan di sekitar.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         KEUNGGULAN: 3 keunggulan utama mengelilingi foto produk
+         Foto: assets/img/watchout-detail.webp (+ .png)
+         ============================================================ -->
+    <section class="section perks" id="keunggulan" aria-labelledby="perks-title">
+      <div class="container">
+        <h2 class="display perks__title" id="perks-title">Dirancang untuk dipakai setiap hari.</h2>
+        <div class="perks__grid">
+          <article class="perk perk--main">
+            <svg class="perk__icon" aria-hidden="true"><use href="#i-alert"/></svg>
+            <h3>Alarm darurat</h3>
+            <p>Fitur paling penting di WatchOut! Cukup tarik talinya, tanpa perlu mencari tombol kecil atau membuka ponsel. Suaranya terdengar hingga sekitar 200 meter.</p>
+          </article>
+
+          <figure class="perks__photo">
+            <picture>
+              <source srcset="assets/img/watchout-detail.webp" type="image/webp">
+              <img src="assets/img/watchout-detail.png" width="480" height="460" loading="lazy"
+                   alt="Bagian belakang jam WatchOut! dengan tali penarik alarm berwarna putih">
+            </picture>
+          </figure>
+
+          <div class="perks__side">
+            <article class="perk">
+              <svg class="perk__icon" aria-hidden="true"><use href="#i-drop"/></svg>
+              <h3>Tahan air</h3>
+              <p>Tidak perlu dilepas saat cuci tangan, wudu, atau kehujanan.</p>
+            </article>
+            <article class="perk">
+              <svg class="perk__icon" aria-hidden="true"><use href="#i-feather"/></svg>
+              <h3>Ringan dan ramah lansia</h3>
+              <p>Desainnya sederhana dan ringan, nyaman dipakai dari pagi sampai malam.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         VIEWER 3D
+         Model: assets/3d/watchout-model.js | pengaturan: js/config.js
+         Teks keterangan tiap sudut pandang ada di atribut data-caption
+         ============================================================ -->
+    <section class="section viewer" id="lihat-3d" aria-labelledby="viewer-title">
+      <div class="container">
+        <div class="viewer__head">
+          <h2 class="display viewer__title" id="viewer-title">Lihat WatchOut! dari setiap sisi.</h2>
+          <p class="viewer__intro">Geser model untuk memutarnya. Layar jam menampilkan waktu saat ini.</p>
+        </div>
+
+        <div class="viewer__stage" data-viewer data-model-src="assets/3d/watchout-model.js">
+          <canvas class="viewer__canvas" tabindex="0" role="img"
+                  aria-label="Model 3D jam WatchOut!. Geser, atau gunakan tombol panah untuk memutar."></canvas>
+          <p class="viewer__hint" data-viewer-hint aria-hidden="true">
+            <svg class="icon" aria-hidden="true"><use href="#i-drag"/></svg> Geser untuk memutar
+          </p>
+          <p class="viewer__loading" aria-hidden="true">Memuat model 3D…</p>
+          <div class="viewer__zoom">
+            <button type="button" data-viewer-zoom="in" aria-label="Perbesar"><svg class="icon" aria-hidden="true"><use href="#i-plus"/></svg></button>
+            <button type="button" data-viewer-zoom="out" aria-label="Perkecil"><svg class="icon" aria-hidden="true"><use href="#i-minus"/></svg></button>
+          </div>
+          <!-- tampil jika perangkat tidak mendukung 3D -->
+          <div class="viewer__fallback">
+            <picture>
+              <source srcset="assets/img/watchout-mockup.webp" type="image/webp">
+              <img src="assets/img/watchout-mockup.png" width="1435" height="445" loading="lazy" alt="Jam WatchOut! dengan tali penarik alarm">
+            </picture>
+            <p>Tampilan 3D belum bisa dimuat di perangkat ini, jadi kami tampilkan gambar produknya.</p>
+          </div>
+        </div>
+
+        <div class="viewer__controls">
+          <div class="viewer__views" role="group" aria-label="Pilih sudut pandang">
+            <button type="button" data-viewer-view="front" aria-pressed="true"
+                    data-caption="Layar digital menampilkan jam, cuaca, kontrol musik, navigasi, dan pengingat alarm.">Layar</button>
+            <button type="button" data-viewer-view="back" aria-pressed="false"
+                    data-caption="Bagian belakang yang bersentuhan dengan kulit, dengan logo WatchOut! di tengahnya.">Belakang</button>
+            <button type="button" data-viewer-view="cord" aria-pressed="false"
+                    data-caption="Tali penarik menggantung di sisi jam. Tarik saat butuh bantuan, alarm berbunyi hingga ±200 meter.">Tali alarm</button>
+          </div>
+          <p class="viewer__caption" data-viewer-caption aria-live="polite"
+             data-default="Pilih sudut pandang untuk melihat bagian-bagian penting jam ini.">Pilih sudut pandang untuk melihat bagian-bagian penting jam ini.</p>
+          <div class="viewer__actions">
+            <button class="btn btn--small btn--alarm" type="button" data-alarm-toggle data-alarm-source="viewer" aria-pressed="false">
+              <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+              <span data-when-alarm="off">Tarik tali</span>
+              <span data-when-alarm="on">Matikan alarm</span>
+            </button>
+            <button class="btn btn--small btn--outline-light" type="button" data-viewer-autorotate aria-pressed="true">
+              <svg class="icon" aria-hidden="true"><use href="#i-rotate"/></svg> Putar otomatis
+            </button>
+            <button class="btn btn--small btn--outline-light" type="button" data-viewer-reset>
+              <svg class="icon" aria-hidden="true"><use href="#i-reset"/></svg> Atur ulang
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FITUR HARIAN: simulator layar jam
+         Tulisan di bawah jam diambil dari atribut data-caption tiap tombol
+         ============================================================ -->
+    <section class="section features" id="fitur" aria-labelledby="features-title">
+      <div class="container">
+        <div class="features__head">
+          <h2 class="display features__title" id="features-title">Lebih dari jam biasa.</h2>
+          <p class="lead">Selain alarm darurat, WatchOut! membantu kegiatan sehari-hari. Pilih fitur untuk melihat tampilannya di layar jam.</p>
+        </div>
+
+        <div class="features__grid">
+          <div class="sim-tabs" role="tablist" aria-label="Fitur WatchOut!" aria-orientation="vertical" data-sim-tabs>
+            <button class="sim-tab" type="button" role="tab" id="tab-jam" aria-controls="layar-jam" aria-selected="true" data-sim-tab
+                    data-caption="Jam digital dengan angka besar, lengkap dengan hari dan tanggal.">
+              <svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg><span>Jam digital</span>
+            </button>
+            <button class="sim-tab" type="button" role="tab" id="tab-cuaca" aria-controls="layar-cuaca" aria-selected="false" tabindex="-1" data-sim-tab
+                    data-caption="Cek cuaca sebelum keluar rumah.">
+              <svg class="icon" aria-hidden="true"><use href="#i-weather"/></svg><span>Cuaca</span>
+            </button>
+            <button class="sim-tab" type="button" role="tab" id="tab-musik" aria-controls="layar-musik" aria-selected="false" tabindex="-1" data-sim-tab
+                    data-caption="Putar, jeda, dan ganti lagu langsung dari pergelangan tangan.">
+              <svg class="icon" aria-hidden="true"><use href="#i-music"/></svg><span>Kontrol musik</span>
+            </button>
+            <button class="sim-tab" type="button" role="tab" id="tab-ponsel" aria-controls="layar-ponsel" aria-selected="false" tabindex="-1" data-sim-tab
+                    data-caption="Lupa menaruh ponsel? Buat ponsel berbunyi dari jam.">
+              <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg><span>Find phone</span>
+            </button>
+            <button class="sim-tab" type="button" role="tab" id="tab-navigasi" aria-controls="layar-navigasi" aria-selected="false" tabindex="-1" data-sim-tab
+                    data-caption="Petunjuk arah sederhana saat bepergian.">
+              <svg class="icon" aria-hidden="true"><use href="#i-nav"/></svg><span>Navigasi</span>
+            </button>
+            <button class="sim-tab" type="button" role="tab" id="tab-alarm" aria-controls="layar-alarm" aria-selected="false" tabindex="-1" data-sim-tab
+                    data-caption="Pengingat untuk bangun, minum obat, atau jadwal kontrol ke dokter.">
+              <svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg><span>Alarm</span>
+            </button>
+          </div>
+
+          <div class="sim">
+            <div class="sim-watch">
+              <div class="sim-watch__strap sim-watch__strap--left" aria-hidden="true"></div>
+              <div class="sim-watch__strap sim-watch__strap--right" aria-hidden="true"></div>
+              <div class="sim-watch__lug sim-watch__lug--left" aria-hidden="true"></div>
+              <div class="sim-watch__lug sim-watch__lug--right" aria-hidden="true"></div>
+              <div class="sim-watch__case">
+                <div class="sim-watch__screen">
+
+                  <!-- Layar: jam digital -->
+                  <div class="screen screen--clock" role="tabpanel" id="layar-jam" aria-labelledby="tab-jam" data-sim-panel>
+                    <p class="screen__time" data-live-time>09:41</p>
+                    <p class="screen__date" data-live-date>Senin, 16 November</p>
+                  </div>
+
+                  <!-- Layar: cuaca (contoh tampilan) -->
+                  <div class="screen screen--weather" role="tabpanel" id="layar-cuaca" aria-labelledby="tab-cuaca" data-sim-panel hidden>
+                    <svg class="screen__art" viewBox="0 0 64 64" aria-hidden="true">
+                      <circle cx="24" cy="24" r="10" class="art-sun"/>
+                      <path class="art-cloud" d="M22 50h24a9 9 0 0 0 1-17.9A12 12 0 0 0 24 35a8 8 0 0 0-2 15Z"/>
+                    </svg>
+                    <p class="screen__big">29°</p>
+                    <p class="screen__small">Cerah berawan</p>
+                  </div>
+
+                  <!-- Layar: kontrol musik (contoh tampilan) -->
+                  <div class="screen screen--music" role="tabpanel" id="layar-musik" aria-labelledby="tab-musik" data-sim-panel hidden>
+                    <p class="screen__small">Sedang diputar</p>
+                    <p class="screen__title">Lagu kenangan</p>
+                    <div class="screen__controls">
+                      <span class="ctrl" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 6v12M18 6l-8 6 8 6Z"/></svg></span>
+                      <button class="ctrl ctrl--main" type="button" data-sim-toggle aria-pressed="true"
+                              aria-label="Jeda lagu" data-label-on="Jeda lagu" data-label-off="Putar lagu">
+                        <svg class="ctrl__pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 6v12M15.5 6v12"/></svg>
+                        <svg class="ctrl__play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5 19 12 8 18.5Z"/></svg>
+                      </button>
+                      <span class="ctrl" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 6v12M6 6l8 6-8 6Z"/></svg></span>
+                    </div>
+                  </div>
+
+                  <!-- Layar: find phone -->
+                  <div class="screen screen--phone" role="tabpanel" id="layar-ponsel" aria-labelledby="tab-ponsel" data-sim-panel hidden>
+                    <div class="screen__ping" aria-hidden="true">
+                      <span></span><span></span>
+                      <svg viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="18" rx="2.2"/><path d="M11.2 17.8h1.6"/></svg>
+                    </div>
+                    <p class="screen__title">Mencari ponsel…</p>
+                    <p class="screen__small">Ponsel Anda sedang berdering</p>
+                  </div>
+
+                  <!-- Layar: navigasi (contoh tampilan) -->
+                  <div class="screen screen--nav" role="tabpanel" id="layar-navigasi" aria-labelledby="tab-navigasi" data-sim-panel hidden>
+                    <svg class="screen__turn" viewBox="0 0 64 64" aria-hidden="true"><path d="M40 54V30a8 8 0 0 0-8-8H16"/><path d="M26 11 15 22l11 11"/></svg>
+                    <div>
+                      <p class="screen__big">50 m</p>
+                      <p class="screen__small">Belok kiri ke Jl. Melati</p>
+                    </div>
+                  </div>
+
+                  <!-- Layar: alarm / pengingat (contoh tampilan) -->
+                  <div class="screen screen--alarm" role="tabpanel" id="layar-alarm" aria-labelledby="tab-alarm" data-sim-panel hidden>
+                    <p class="screen__big">06:30</p>
+                    <p class="screen__small">Minum obat pagi</p>
+                    <button class="switch" type="button" data-sim-toggle aria-pressed="true"
+                            aria-label="Matikan pengingat" data-label-on="Matikan pengingat" data-label-off="Nyalakan pengingat">
+                      <span class="switch__knob"></span>
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+              <svg class="sim-watch__cord" viewBox="0 0 40 170" aria-hidden="true" focusable="false">
+                <path class="cord__thread" d="M18.5 0 17.6 22M21.5 0 22.4 22"/>
+                <path class="cord__loop-edge" d="M20 70C17 92 9 124 9.2 144c.2 13 6 18.6 10.8 18.6s10.6-5.6 10.8-18.6C31 124 23 92 20 70Z"/>
+                <path class="cord__loop" d="M20 70C17 92 9 124 9.2 144c.2 13 6 18.6 10.8 18.6s10.6-5.6 10.8-18.6C31 124 23 92 20 70Z"/>
+                <rect class="cord__band" x="16.4" y="26" width="7.2" height="48" rx="2"/>
+                <rect class="cord__cap" x="13" y="20" width="14" height="8" rx="3"/>
+              </svg>
+            </div>
+            <p class="sim__caption" data-sim-caption aria-live="polite">Jam digital dengan angka besar, lengkap dengan hari dan tanggal.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SPESIFIKASI: tambah baris baru dengan menyalin <div class="spec">…</div>
+         ============================================================ -->
+    <section class="section specs" id="spesifikasi" aria-labelledby="specs-title">
+      <div class="container specs__grid">
+        <h2 class="display specs__title" id="specs-title">Spesifikasi singkat.</h2>
+        <dl class="spec-list">
+          <div class="spec"><dt>Fungsi utama</dt><dd>Alarm darurat dengan tali penarik</dd></div>
+          <div class="spec"><dt>Jangkauan suara</dt><dd>Hingga ±200 meter</dd></div>
+          <div class="spec"><dt>Ketahanan</dt><dd>Tahan air</dd></div>
+          <div class="spec"><dt>Desain</dt><dd>Ramah lansia, ringan untuk dipakai sehari-hari</dd></div>
+          <div class="spec"><dt>Fitur harian</dt><dd>Jam digital, cuaca, kontrol musik, find phone, navigasi, alarm</dd></div>
+          <div class="spec"><dt>Warna</dt><dd>Merah dengan aksen krem</dd></div>
+          <div class="spec"><dt>Cocok untuk</dt><dd>Lansia dan keluarga yang menjaganya</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         TANYA JAWAB (FAQ): tambah pertanyaan dengan menyalin <details>…</details>
+         ============================================================ -->
+    <section class="section faq" id="tanya-jawab" aria-labelledby="faq-title">
+      <div class="container faq__grid">
+        <h2 class="display faq__title" id="faq-title">Pertanyaan yang sering diajukan.</h2>
+        <div class="faq__list">
+          <details class="qa" open>
+            <summary>Bagaimana cara membunyikan alarm darurat?</summary>
+            <p>Tarik tali yang menggantung di sisi jam. Alarm langsung berbunyi kencang untuk menarik perhatian orang di sekitar.</p>
+          </details>
+          <details class="qa">
+            <summary>Seberapa jauh suara alarm terdengar?</summary>
+            <p>Suara alarm dapat terdengar hingga sekitar 200 meter. Jarak sebenarnya bisa berbeda, tergantung kondisi sekitar seperti keramaian atau dinding bangunan.</p>
+          </details>
+          <details class="qa">
+            <summary>Apakah WatchOut! tahan air?</summary>
+            <p>Ya. WatchOut! tahan air, jadi tidak perlu dilepas saat cuci tangan, wudu, atau kehujanan.</p>
+          </details>
+          <details class="qa">
+            <summary>Apakah bisa dipakai setiap hari?</summary>
+            <p>Bisa. Desainnya ringan dan ramah lansia. Selain alarm darurat, ada fitur harian seperti jam digital, cuaca, kontrol musik, find phone, navigasi, dan alarm.</p>
+          </details>
+          <details class="qa">
+            <summary>Untuk siapa WatchOut! dibuat?</summary>
+            <p>Untuk lansia, terutama yang sering beraktivitas sendiri, dan untuk keluarga yang ingin orang tuanya bisa meminta tolong dengan cepat.</p>
+          </details>
+          <details class="qa">
+            <summary>Bagaimana cara memesan atau bertanya lebih lanjut?</summary>
+            <p>Kirim pesan lewat formulir di bawah atau hubungi kami di WhatsApp. Tim kami akan membantu menjawab pertanyaan Anda.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         KONTAK: data kontak diatur di js/config.js
+         ============================================================ -->
+    <section class="section contact" id="kontak" aria-labelledby="contact-title">
+      <div class="container contact__grid">
+        <div class="contact__info">
+          <h2 class="display contact__title" id="contact-title">Ada pertanyaan tentang WatchOut!?</h2>
+          <p class="lead">Tinggalkan pesan, kami akan membalas lewat WhatsApp.</p>
+          <ul class="contact-list">
+            <li data-contact-item>
+              <a data-contact="whatsapp" href="#kontak" target="_blank" rel="noopener">
+                <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg>
+                <span><small>WhatsApp</small><span data-contact-text>+62 812-0000-0000</span></span>
+              </a>
+            </li>
+            <li data-contact-item>
+              <a data-contact="email" href="#kontak">
+                <svg class="icon" aria-hidden="true"><use href="#i-mail"/></svg>
+                <span><small>Email</small><span data-contact-text>halo@watchout.id</span></span>
+              </a>
+            </li>
+            <li data-contact-item>
+              <a data-contact="instagram" href="#kontak" target="_blank" rel="noopener">
+                <svg class="icon" aria-hidden="true"><use href="#i-instagram"/></svg>
+                <span><small>Instagram</small><span data-contact-text>@watchout.id</span></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <form class="contact-form" data-contact-form novalidate>
+          <div class="field">
+            <label for="nama">Nama Anda</label>
+            <input id="nama" name="nama" type="text" autocomplete="name" aria-describedby="nama-error" required>
+            <p class="field__error" id="nama-error" hidden>Tulis nama Anda terlebih dahulu.</p>
+          </div>
+          <div class="field">
+            <label for="pesan">Pesan</label>
+            <textarea id="pesan" name="pesan" rows="4" aria-describedby="pesan-error" required
+                      placeholder="Contoh: Saya ingin tahu cara memesan WatchOut! untuk ibu saya."></textarea>
+            <p class="field__error" id="pesan-error" hidden>Tulis pesan yang ingin Anda sampaikan.</p>
+          </div>
+          <button class="btn btn--primary btn--block" type="submit">
+            <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg> Kirim lewat WhatsApp
+          </button>
+          <p class="contact-form__note" data-form-status aria-live="polite">Tombol ini membuka WhatsApp dengan pesan Anda.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="site-footer">
+    <div class="container site-footer__grid">
+      <div class="site-footer__brand">
+        <img src="assets/img/logo-watchout-cream.png" alt="WatchOut!" width="1003" height="498" loading="lazy">
+        <p lang="en">Your Safety, Our Priority!</p>
+      </div>
+      <nav aria-label="Menu bawah">
+        <ul class="site-footer__nav">
+          <li><a href="#cara-kerja">Cara kerja</a></li>
+          <li><a href="#keunggulan">Keunggulan</a></li>
+          <li><a href="#lihat-3d">Lihat 3D</a></li>
+          <li><a href="#fitur">Fitur</a></li>
+          <li><a href="#spesifikasi">Spesifikasi</a></li>
+          <li><a href="#tanya-jawab">Tanya jawab</a></li>
+          <li><a href="#kontak">Hubungi kami</a></li>
+        </ul>
+      </nav>
+      <p class="site-footer__copy">© <span data-year>2026</span> WatchOut! Semua hak dilindungi.</p>
+    </div>
+  </footer>
+
+  <!-- Urutan file JavaScript (jangan diubah) -->
+  <script src="js/config.js" defer></script>
+  <script src="js/alarm.js" defer></script>
+  <script src="js/cord-demo.js" defer></script>
+  <script src="js/viewer3d.js" defer></script>
+  <script src="js/features.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

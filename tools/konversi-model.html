@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Konversi model 3D | WatchOut!</title>
+  <link rel="icon" type="image/png" href="../assets/img/favicon-32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400..800&family=Bagel+Fat+One&display=swap">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .tool { width: min(100% - 2 * var(--gutter), 860px); margin: 0 auto; padding: 48px 0 96px; }
+    .tool__logo { height: 52px; width: auto; margin-bottom: 32px; }
+    .tool h1 { margin-bottom: 16px; }
+    .tool ol { padding-left: 1.4em; margin: 0 0 32px; }
+    .tool li { margin-bottom: 8px; }
+    .panel { background: var(--paper); border-radius: var(--radius-md); padding: clamp(22px, 4vw, 40px); display: grid; gap: 22px; }
+    .panel label { display: block; font-weight: 800; margin-bottom: 6px; }
+    .panel small { display: block; color: var(--ink-soft); font-size: 1rem; margin-top: 4px; }
+    .panel input[type=file], .panel input[type=number], .panel textarea {
+      width: 100%; font: inherit; font-size: 1.0625rem; padding: 12px 14px; border-radius: var(--radius-sm);
+      border: 2px solid rgba(43, 12, 15, .25); background: #fff; color: var(--ink);
+    }
+    .panel textarea { min-height: 96px; resize: vertical; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    details.advanced summary { cursor: pointer; font-weight: 800; color: var(--crimson); }
+    details.advanced[open] summary { margin-bottom: 18px; }
+    .report { margin-top: 28px; padding: 22px 26px; border-radius: var(--radius-md); border: 2px solid var(--line); background: #fff; }
+    .report[hidden] { display: none; }
+    .report h2 { font-size: 1.5rem; margin-bottom: 10px; }
+    .report ul { margin: 8px 0 18px; padding-left: 1.2em; font-size: 1.0625rem; }
+    .report .is-error { color: #B3140A; font-weight: 700; }
+    @media (max-width: 640px) { .row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main class="tool">
+    <a href="../index.html"><img class="tool__logo" src="../assets/img/logo-watchout.png" alt="WatchOut!, kembali ke website"></a>
+    <h1 class="display">Konversi model 3D</h1>
+    <p class="lead">Gunakan halaman ini jika model 3D WatchOut! direvisi. Hasilnya adalah file
+      <strong>watchout-model.js</strong> yang dipakai oleh viewer 3D di website.</p>
+    <ol>
+      <li>Di Blender: <em>File › Export › Wavefront (.obj)</em>. Centang <em>Normals</em>, <em>UV Coordinates</em>, dan <em>Materials</em>.</li>
+      <li>Pilih file <strong>.obj</strong> dan <strong>.mtl</strong> hasil export di bawah ini, beserta gambar tekstur (misalnya <em>logo watchout.png</em>).</li>
+      <li>Tekan <strong>Buat file model</strong>, lalu simpan file yang diunduh ke folder <strong>assets/3d/</strong> (timpa file lama).</li>
+      <li>Muat ulang (refresh) index.html. Selesai.</li>
+    </ol>
+
+    <form class="panel" id="converter">
+      <div>
+        <label for="obj">File model (.obj)</label>
+        <input id="obj" type="file" accept=".obj" required>
+      </div>
+      <div class="row">
+        <div>
+          <label for="mtl">File material (.mtl)</label>
+          <input id="mtl" type="file" accept=".mtl">
+          <small>Opsional, tapi disarankan.</small>
+        </div>
+        <div>
+          <label for="tex">Gambar tekstur</label>
+          <input id="tex" type="file" accept="image/png,image/jpeg" multiple>
+          <small>Nama file harus sama dengan yang tertulis di file .mtl.</small>
+        </div>
+      </div>
+      <details class="advanced">
+        <summary>Pengaturan lanjutan</summary>
+        <div class="row">
+          <div>
+            <label for="smooth">Sudut auto smooth (derajat)</label>
+            <input id="smooth" type="number" min="0" max="180" step="1" value="40">
+            <small>0 = pakai normal asli dari file OBJ.</small>
+          </div>
+          <div>
+            <label for="minsize">Buang bagian lebih kecil dari (%)</label>
+            <input id="minsize" type="number" min="0" max="20" step="0.1" value="0.5">
+            <small>Ukuran dibanding seluruh model. Membuang objek "nyasar" yang sangat kecil.</small>
+          </div>
+        </div>
+        <div style="margin-top:18px">
+          <label for="exclude">Bagian yang dibuang (satu per baris)</label>
+          <textarea id="exclude">mesh_5_2.002
+WATCH+STRAP+V3.001/Material_27.002</textarea>
+          <small>Tulis nama objek, atau nama objek/nama material. Dua baris bawaan adalah potongan kecil yang melayang di model saat ini.</small>
+        </div>
+      </details>
+      <button class="btn btn--primary" type="submit">Buat file model</button>
+    </form>
+
+    <section class="report" id="report" hidden aria-live="polite"></section>
+  </main>
+
+  <script src="obj-converter.js"></script>
+  <script>
+    (function () {
+      'use strict';
+      var form = document.getElementById('converter');
+      var report = document.getElementById('report');
+
+      function readText(file) {
+        return new Promise(function (resolve, reject) {
+          if (!file) return resolve('');
+          var r = new FileReader();
+          r.onload = function () { resolve(r.result); };
+          r.onerror = function () { reject(new Error('Gagal membaca ' + file.name)); };
+          r.readAsText(file);
+        });
+      }
+      function readDataURL(file) {
+        return new Promise(function (resolve, reject) {
+          var r = new FileReader();
+          r.onload = function () { resolve([file.name, r.result]); };
+          r.onerror = function () { reject(new Error('Gagal membaca ' + file.name)); };
+          r.readAsDataURL(file);
+        });
+      }
+      function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var objFile = document.getElementById('obj').files[0];
+        if (!objFile) { report.hidden = false; report.innerHTML = '<p class="is-error">Pilih file .obj terlebih dahulu.</p>'; return; }
+        var mtlFile = document.getElementById('mtl').files[0];
+        var texFiles = Array.prototype.slice.call(document.getElementById('tex').files);
+        report.hidden = false; report.innerHTML = '<p>Memproses model…</p>';
+
+        Promise.all([readText(objFile), readText(mtlFile), Promise.all(texFiles.map(readDataURL))]).then(function (res) {
+          var textures = {};
+          res[2].forEach(function (pair) { textures[pair[0]] = pair[1]; });
+          var out = WatchOutObjConverter.convert(res[0], res[1], {
+            sourceName: objFile.name,
+            smoothAngle: Number(document.getElementById('smooth').value),
+            minPartRatio: Number(document.getElementById('minsize').value) / 100,
+            exclude: document.getElementById('exclude').value.split(/\r?\n/),
+            textures: textures
+          });
+          var script = WatchOutObjConverter.toScript(out.model);
+          var url = URL.createObjectURL(new Blob([script], { type: 'text/javascript' }));
+          var r = out.report;
+          var html = '<h2>Model siap</h2>' +
+            '<p>' + r.kept.length + ' bagian, ' + r.triangles.toLocaleString('id-ID') + ' segitiga, ' +
+            Math.round(script.length / 1024) + ' KB.</p>';
+          if (r.missingTextures && r.missingTextures.length) {
+            html += '<p class="is-error">Tekstur belum dipilih: ' + r.missingTextures.map(esc).join(', ') + '. Pilih file gambarnya lalu ulangi.</p>';
+          }
+          if (r.dropped.length) {
+            html += '<p>Bagian yang dibuang:</p><ul>' + r.dropped.map(function (d) { return '<li>' + esc(d.part) + ' (' + esc(d.reason) + ')</li>'; }).join('') + '</ul>';
+          }
+          html += '<a class="btn btn--primary" download="watchout-model.js" href="' + url + '">Unduh watchout-model.js</a>' +
+            '<p style="margin-top:14px">Simpan ke folder <strong>assets/3d/</strong>, timpa file lama, lalu refresh website.</p>';
+          report.innerHTML = html;
+        }).catch(function (err) {
+          report.innerHTML = '<p class="is-error">Model tidak bisa diproses: ' + esc(err.message) + '</p>';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
