@@ -31,7 +31,7 @@ watchout-website/
 │   ├── config.js            PENGATURAN: kontak, alarm, viewer 3D  ← paling sering diedit
 │   ├── alarm.js             suara sirene simulasi
 │   ├── shop.js              pembelian: jumlah, total harga, jendela QRIS
-│   ├── pull-cord.js         tali yang bisa ditarik (hero, jam simulator, foto produk)
+│   ├── pull-cord.js         tali yang bisa ditarik (hero, jam simulator)
 │   ├── viewer3d.js          viewer model 3D
 │   ├── features.js          simulator layar jam (bagian "Fitur")
 │   └── main.js              menu, ukuran teks, formulir WhatsApp
@@ -87,7 +87,7 @@ barisnya otomatis disembunyikan.
 
 **Mengganti gambar:** simpan gambar baru di `assets/img/` dengan nama file yang sama, lalu ganti juga
 versi `.webp`-nya (atau hapus baris `<source … .webp>` di index.html agar memakai `.png`).
-Gambar jam di bagian atas (`watchout-band`) adalah mockup asli tim (1435 × 215 piksel) **tanpa tali**; talinya digambar dengan SVG di `index.html` supaya bisa ditarik. Foto produk (`watchout-product`, jam berdiri tegak dengan tali jam melingkar) juga tanpa tali penarik karena alasan yang sama; talinya ditarik ke kanan (`data-axis="x"`).
+Gambar jam di bagian atas (`watchout-band`) adalah mockup asli tim (1435 × 215 piksel) **tanpa tali**; talinya digambar dengan SVG di `index.html` supaya bisa ditarik. Foto produk (`watchout-product`) adalah foto asli jam WatchOut! (tanpa fitur tarik tali).
 
 Di tampilan 3D, jam diputar supaya layarnya tegak seperti saat dipakai. Sudutnya diatur lewat `roll` di `js/config.js` (90 = layar tegak, tali penarik di kanan; 0 = posisi asli file 3D). Foto-foto di halaman miring mengikuti kursor; kekuatannya diatur lewat `--photo-tilt` di `css/style.css`.
 

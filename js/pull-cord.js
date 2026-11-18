@@ -1,8 +1,8 @@
 /* ==========================================================================
    WatchOut! — TALI YANG BISA DITARIK
    --------------------------------------------------------------------------
-   Dipakai di tiga tempat: gambar jam di bagian atas, jam simulator (Fitur),
-   dan foto produk (Pesan sekarang). Tarik tali (ke bawah, atau ke kanan untuk foto produk) dengan mouse / jari,
+   Dipakai di dua tempat: gambar jam di bagian atas dan jam simulator
+   (Fitur). Tarik tali (ke bawah, atau ke kanan bila data-axis="x") dengan mouse / jari,
    atau klik / tekan Enter pada tali. Jika ditarik cukup jauh, alarm berbunyi
    lewat js/alarm.js.
 
@@ -14,6 +14,8 @@
      data-hint     isi "tug" jika tali perlu memberi contoh tarikan saat halaman dibuka
      data-axis     isi "x" jika tali ditarik ke kanan (default: ke bawah)
      data-scale    skala grup SVG tali, jika grup tali diperkecil/diperbesar (default 1)
+     data-stretch-len  untuk tali dari foto ([data-cord-stretch]): panjang tali dalam satuan data-view-w;
+                   tali foto memanjang ke bawah saat ditarik (tanpa SVG)
    Semua angka memakai satuan viewBox SVG.
    ========================================================================== */
 (function () {
@@ -26,14 +28,17 @@
     var thread = root.querySelector('[data-cord-thread]');
     var lower = root.querySelector('[data-cord-lower]');
     var handle = root.querySelector('[data-pullcord-handle]');
-    if (!svg || !thread || !lower || !handle) return;
+    var stretch = root.querySelector('[data-cord-stretch]');
+    if (!handle || (!stretch && (!svg || !thread || !lower))) return;
+    var measure = svg || root;
+    var STRETCH_LEN = Number(root.getAttribute('data-stretch-len')) || 100;
 
     var VIEW_W = Number(root.getAttribute('data-view-w')) || 100;
     var FREE = Number(root.getAttribute('data-free')) || 40;
     var MAX = Number(root.getAttribute('data-max')) || 120;
     var TRIGGER = Number(root.getAttribute('data-trigger')) || 70;
-    var tpl = thread.getAttribute('data-tpl');
-    var baseY = Number(thread.getAttribute('data-base-y')) || 0;
+    var tpl = thread ? thread.getAttribute('data-tpl') : '';
+    var baseY = thread ? Number(thread.getAttribute('data-base-y')) || 0 : 0;
     var source = root.getAttribute('data-source') || 'cord';
     var AXIS_X = root.getAttribute('data-axis') === 'x';
     var SCALE = Number(root.getAttribute('data-scale')) || 1;
@@ -41,12 +46,13 @@
     var pull = 0, vel = 0, raf = 0;
     var dragging = false, startPos = 0, startPull = 0, moved = false, fired = false, suppressClick = false, touched = false;
 
-    function unitsPerPx() { return VIEW_W / (svg.getBoundingClientRect().width || VIEW_W); }
+    function unitsPerPx() { return VIEW_W / (measure.getBoundingClientRect().width || VIEW_W); }
 
     function render() {
       var p = Math.round(pull * 10) / 10;
       if (tpl) thread.setAttribute('d', tpl.replace(/\{y\}/g, String(baseY + p)));
-      lower.setAttribute('transform', 'translate(0 ' + p + ')');
+      if (lower) lower.setAttribute('transform', 'translate(0 ' + p + ')');
+      if (stretch) stretch.style.transform = 'scaleY(' + Math.max(0.97, 1 + p / STRETCH_LEN).toFixed(4) + ')';
       var px = (p * SCALE / unitsPerPx()).toFixed(2);
       handle.style.transform = AXIS_X ? 'translate(' + px + 'px, -50%)' : 'translate(-50%, ' + px + 'px)';
       root.style.setProperty('--pull', Math.max(0, Math.min(1, pull / TRIGGER)).toFixed(3));

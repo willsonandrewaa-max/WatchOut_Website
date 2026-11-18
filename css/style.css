@@ -952,7 +952,7 @@ html.pay-open { overflow: hidden; }
 .perk__icon { transition: transform .25s ease, color .25s ease; }
 .perk:hover .perk__icon { transform: scale(1.12); color: var(--crimson); }
 
-/* tali yang bisa ditarik (jam simulator & foto produk) */
+/* tali yang bisa ditarik (jam simulator) */
 .pull-handle {
   position: absolute; border: 0; padding: 0; background: transparent; border-radius: 30px;
   cursor: grab; touch-action: none; -webkit-tap-highlight-color: transparent;
@@ -965,12 +965,12 @@ html.pay-open { overflow: hidden; }
 .product__pull { position: relative; width: min(100%, 520px); margin: 0 auto 40px; }
 .product__pull img { width: 100%; height: auto; }
 .product__cord { position: absolute; left: 0; top: 0; width: 100%; height: auto; overflow: visible; pointer-events: none; }
-.pull-handle--product { left: calc(382 / 720 * 100%); top: calc(437 / 783 * 100%); width: calc(195 / 720 * 100%); height: max(56px, calc(70 / 783 * 100%)); transform: translate(0, -50%); cursor: ew-resize; }
-[data-pullcord].is-dragging .pull-handle--product { cursor: ew-resize; }
+.product__pull--photo { width: min(100%, 380px); margin-bottom: 0; }
+/* latar putih foto dilebur ke warna kartu */
+.product__pull--photo img { mix-blend-mode: multiply; }
 .cord__thread--thick { stroke-width: 2.2; }
 .cord__loop-edge--big { stroke-width: 12; }
 .cord__loop--big { stroke-width: 9; }
-.product__try { margin: 14px 0 0; text-align: center; font-weight: 600; font-size: 1rem; color: var(--crimson); }
 .product__media { display: block; }
 
 /* logo di tabel perbandingan */
