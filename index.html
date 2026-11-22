@@ -6,7 +6,7 @@
 
   <!-- ===================== JUDUL & DESKRIPSI (muncul di Google & tab browser) ===================== -->
   <title>WatchOut! | Jam Alarm Darurat untuk Lansia</title>
-  <meta name="description" content="WatchOut! jam tangan alarm darurat untuk lansia. Tarik talinya, sirene 100 dB terdengar hingga 200 meter. Tahan air, ramah lansia, hanya Rp289.000.">
+  <meta name="description" content="WatchOut! jam tangan alarm darurat untuk lansia. Tarik talinya, sirene 100 dB terdengar hingga 100 meter. Tahan air, ramah lansia, hanya Rp289.000.">
   <meta name="theme-color" content="#A60914">
 
   <!-- Tampilan saat link dibagikan di WhatsApp / media sosial.
@@ -14,7 +14,7 @@
        contoh: https://namadomainanda.com/assets/img/og-image.jpg -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="WatchOut! | Your Safety, Our Priority!">
-  <meta property="og:description" content="Jam tangan alarm darurat untuk lansia. Satu tarikan, sirene 100 dB terdengar hingga 200 meter. Rp289.000.">
+  <meta property="og:description" content="Jam tangan alarm darurat untuk lansia. Satu tarikan, sirene 100 dB terdengar hingga 100 meter. Rp289.000.">
   <meta property="og:image" content="assets/img/og-image.jpg">
 
   <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
@@ -48,10 +48,8 @@
     <defs>
       <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="13" r="7.5"/><path d="M12 9.3V13l2.6 1.8M4.6 4.6 2.8 6.4M19.4 4.6l1.8 1.8"/></symbol>
       <symbol id="i-weather" viewBox="0 0 24 24"><path d="M7.5 2.8v1.4M2.8 7.5h1.4M4.2 4.2l1 1M10.8 4.2l-1 1"/><path d="M5.4 10.6a3.3 3.3 0 1 1 5.5-3.3"/><path d="M8.8 20.5h8.4a3.8 3.8 0 0 0 .4-7.6 5 5 0 0 0-9.4 1.3 3.2 3.2 0 0 0 .6 6.3Z"/></symbol>
-      <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5.8l11-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="15.8" r="2.5"/></symbol>
-      <symbol id="i-phone" viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="18" rx="2.2"/><path d="M11.2 17.8h1.6M4.8 8.6a5.6 5.6 0 0 0 0 6.8M19.2 8.6a5.6 5.6 0 0 1 0 6.8"/></symbol>
+      <symbol id="i-thermo" viewBox="0 0 24 24"><path d="M10 14.2V5a2 2 0 0 1 4 0v9.2a4 4 0 1 1-4 0Z"/><path d="M12 9v7"/></symbol>
       <symbol id="i-nav" viewBox="0 0 24 24"><path d="M12 2.8 19 20.4l-7-3.7-7 3.7Z"/></symbol>
-      <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16.2v-5a6 6 0 0 1 12 0v5l1.6 2.1H4.4Z"/><path d="M10 21a2.1 2.1 0 0 0 4 0"/></symbol>
       <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.4 21.6 20H2.4Z"/><path d="M12 10v4.4M12 17.2v.2"/></symbol>
       <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6.2 6.7 6.2 11.2a6.2 6.2 0 0 1-12.4 0C5.8 9.7 12 3 12 3Z"/><path d="M9 14.6a3 3 0 0 0 2.8 2.9"/></symbol>
       <symbol id="i-feather" viewBox="0 0 24 24"><path d="M20 4c-7.2 0-12.6 5-13 13 7.8-.4 13-5.8 13-13Z"/><path d="M3.8 20.2 13 11"/></symbol>
@@ -119,7 +117,7 @@
 
     <!-- ============================================================
          A. HOOK: judul utama, slogan, penjelasan singkat
-         Gambar jam (mockup): assets/img/watchout-band.webp (+ .png), tali digambar dengan SVG agar bisa ditarik
+         Gambar jam: assets/img/watchout-band.webp (+ .png); tali penarik: watchout-band-tali*.png (dipotong dari gambar yang sama)
          ============================================================ -->
     <section class="hero" id="beranda" aria-labelledby="hero-title">
       <div class="container hero__top">
@@ -131,7 +129,7 @@
           <p class="hero__lead">
             Satu tarikan, bantuan datang. <strong>WatchOut!</strong> adalah jam tangan alarm darurat
             untuk lansia. Tarik talinya, sirene 100 dB langsung berbunyi dan terdengar hingga
-            200 meter, sehingga keluarga, perawat, atau tetangga segera tahu ada yang butuh pertolongan.
+            100 meter, sehingga keluarga, perawat, atau tetangga segera tahu ada yang butuh pertolongan.
           </p>
           <div class="hero__actions">
             <a class="btn btn--primary" href="#beli">Beli sekarang</a>
@@ -141,29 +139,24 @@
       </div>
 
       <div class="hero__stage">
-        <div class="band" data-pullcord data-source="hero" data-view-w="1435" data-free="52" data-max="150" data-trigger="84" data-hint="tug">
+        <div class="band" data-pullcord data-source="hero" data-view-w="1725" data-free="62" data-max="180" data-trigger="100" data-hint="tug" data-stretch-len="25">
           <div class="band__figure">
             <picture>
               <source srcset="assets/img/watchout-band.webp" type="image/webp">
-              <img class="band__img" src="assets/img/watchout-band.png" width="1435" height="215"
-                   alt="Jam WatchOut! berwarna merah dengan logo WatchOut! di bagian belakang">
+              <img class="band__img" src="assets/img/watchout-band.png" width="1725" height="269"
+                   alt="Bagian belakang jam WatchOut!: casing putih berlogo WatchOut!, tali jam merah, dan kenop hitam">
             </picture>
 
             <!-- gelombang suara saat alarm berbunyi -->
             <div class="band__rings" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
 
-            <!-- tali penarik (digambar ulang agar bisa ditarik) -->
-            <svg class="band__cord" data-pullcord-svg viewBox="0 0 1435 600" aria-hidden="true" focusable="false">
-              <path class="cord__thread" data-cord-thread data-tpl="M744.6 199 L742.3 {y} M748.4 199 L750.7 {y}" data-base-y="229" d="M744.6 199 L742.3 229 M748.4 199 L750.7 229"/>
-              <g data-cord-lower>
-                <path class="cord__loop-edge" d="M746.5 296 C742 326 730.5 374 730.8 405 C731 424 740 432.5 746.5 432.5 C753 432.5 762 424 762.2 405 C762.5 374 751 326 746.5 296 Z"/>
-                <path class="cord__loop" d="M746.5 296 C742 326 730.5 374 730.8 405 C731 424 740 432.5 746.5 432.5 C753 432.5 762 424 762.2 405 C762.5 374 751 326 746.5 296 Z"/>
-                <rect class="cord__band" x="742" y="234" width="9" height="68" rx="2.5"/>
-                <path class="cord__mark" d="M744.8 249.5l4 2.1-4 2.1Z"/>
-                <rect class="cord__cap" x="737.6" y="228" width="17.8" height="9" rx="3.2"/>
-                <rect class="cord__shine" x="739.6" y="229.7" width="13.8" height="2.1" rx="1"/>
-              </g>
-            </svg>
+            <!-- tali penarik: dipotong dari gambar jam menjadi dua bagian supaya bisa ditarik.
+                 Bagian atas (tali tipis) memanjang, bagian bawah ikut turun. -->
+            <img class="band__thread" data-cord-stretch src="assets/img/watchout-band-tali-atas.png" width="60" height="25" alt="" aria-hidden="true">
+            <picture class="band__lower" data-cord-slide aria-hidden="true">
+              <source srcset="assets/img/watchout-band-tali.webp" type="image/webp">
+              <img src="assets/img/watchout-band-tali.png" width="60" height="274" alt="">
+            </picture>
 
             <button class="band__handle" type="button" data-pullcord-handle aria-describedby="cord-hint-text">
               <span class="visually-hidden">Tarik tali alarm (simulasi)</span>
@@ -181,10 +174,10 @@
           </p>
           <p class="cord-hint__text" id="cord-hint-text">
             <span data-when-alarm="off">Geser tali ke bawah untuk mendengar bunyi alarmnya.</span>
-            <span data-when-alarm="on">Orang di sekitar hingga ±200 meter dapat mendengarnya.</span>
+            <span data-when-alarm="on">Orang di sekitar hingga ±100 meter dapat mendengarnya.</span>
           </p>
           <p class="visually-hidden" aria-live="polite" data-alarm-status
-             data-text-on="Alarm simulasi berbunyi. Orang di sekitar hingga 200 meter dapat mendengarnya."
+             data-text-on="Alarm simulasi berbunyi. Orang di sekitar hingga 100 meter dapat mendengarnya."
              data-text-off=""></p>
           <div class="cord-hint__actions">
             <button class="btn btn--small btn--alarm" type="button" data-alarm-toggle data-alarm-source="hero" aria-pressed="false">
@@ -204,7 +197,7 @@
 
       <ul class="container quickfacts" aria-label="Keunggulan singkat">
         <li><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span><strong>Sirene 100 dB</strong> dengan satu tarikan</span></li>
-        <li><svg class="icon" aria-hidden="true"><use href="#i-wave"/></svg><span><strong>Terdengar ±200 m</strong> dari pengguna</span></li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-wave"/></svg><span><strong>Terdengar ±100 m</strong> dari pengguna</span></li>
         <li><svg class="icon" aria-hidden="true"><use href="#i-drop"/></svg><span><strong>Tahan air</strong> aman dipakai mandi &amp; tidur</span></li>
         <li><svg class="icon" aria-hidden="true"><use href="#i-feather"/></svg><span><strong>Ringan</strong> dan mudah dipakai lansia</span></li>
       </ul>
@@ -325,7 +318,7 @@
           <article class="perk perk--main">
             <svg class="perk__icon" aria-hidden="true"><use href="#i-alert"/></svg>
             <h3>Alarm darurat 100 dB</h3>
-            <p>Satu tarikan tali langsung membunyikan sirene lebih dari 100 desibel yang terdengar hingga 200 meter. Tidak perlu membuka kunci layar atau mencari ponsel.</p>
+            <p>Satu tarikan tali langsung membunyikan sirene lebih dari 100 desibel yang terdengar hingga 100 meter. Tidak perlu membuka kunci layar atau mencari ponsel.</p>
           </article>
           <article class="perk">
             <svg class="perk__icon" aria-hidden="true"><use href="#i-drop"/></svg>
@@ -376,7 +369,7 @@
                 <span class="steps__num" aria-hidden="true">2</span>
                 <div>
                   <h3>Sirene 100 dB berbunyi</h3>
-                  <p>Suara keras terdengar hingga sekitar 200 meter dan langsung menarik perhatian orang di sekitar.</p>
+                  <p>Suara keras terdengar hingga sekitar 100 meter dan langsung menarik perhatian orang di sekitar.</p>
                 </div>
               </li>
               <li class="steps__item">
@@ -391,7 +384,7 @@
 
           <figure class="how__map">
             <svg viewBox="0 0 480 480" role="img" aria-labelledby="map-title">
-              <title id="map-title">Ilustrasi jangkauan suara alarm WatchOut! hingga sekitar 200 meter dari pengguna</title>
+              <title id="map-title">Ilustrasi jangkauan suara alarm WatchOut! hingga sekitar 100 meter dari pengguna</title>
               <defs>
                 <clipPath id="map-clip"><rect width="480" height="480" rx="36"/></clipPath>
                 <radialGradient id="map-reach">
@@ -425,7 +418,7 @@
                 <circle class="map__you" cx="240" cy="240" r="11"/>
                 <g class="map__label" transform="translate(404 126)">
                   <rect x="-50" y="-20" width="100" height="40" rx="20"/>
-                  <text x="0" y="7" text-anchor="middle">±200 m</text>
+                  <text x="0" y="7" text-anchor="middle">±100 m</text>
                 </g>
               </g>
             </svg>
@@ -462,7 +455,7 @@
           <div class="viewer__fallback">
             <picture>
               <source srcset="assets/img/watchout-mockup.webp" type="image/webp">
-              <img src="assets/img/watchout-mockup.png" width="1435" height="445" loading="lazy" alt="Jam WatchOut! dengan tali penarik alarm">
+              <img src="assets/img/watchout-mockup.png" width="1725" height="568" loading="lazy" alt="Jam WatchOut! berwarna putih dengan tali jam merah dan tali penarik alarm">
             </picture>
             <p>Tampilan 3D belum bisa dimuat di perangkat ini, jadi kami tampilkan gambar produknya.</p>
           </div>
@@ -471,11 +464,11 @@
         <div class="viewer__controls">
           <div class="viewer__views" role="group" aria-label="Pilih sudut pandang">
             <button type="button" data-viewer-view="front" aria-pressed="true"
-                    data-caption="Layar digital menampilkan jam, cuaca, kontrol musik, navigasi, dan pengingat alarm.">Layar</button>
+                    data-caption="Layar digital menampilkan jam, cuaca, suhu, dan navigasi.">Layar</button>
             <button type="button" data-viewer-view="back" aria-pressed="false"
                     data-caption="Bagian belakang yang bersentuhan dengan kulit, dengan logo WatchOut! di tengahnya.">Belakang</button>
             <button type="button" data-viewer-view="cord" aria-pressed="false"
-                    data-caption="Tali penarik menggantung di sisi jam. Tarik saat butuh bantuan, alarm berbunyi hingga ±200 meter.">Tali alarm</button>
+                    data-caption="Tali penarik menggantung di sisi jam. Tarik saat butuh bantuan, alarm berbunyi hingga ±100 meter.">Tali alarm</button>
           </div>
           <p class="viewer__caption" data-viewer-caption aria-live="polite"
              data-default="Pilih sudut pandang untuk melihat bagian-bagian penting jam ini.">Pilih sudut pandang untuk melihat bagian-bagian penting jam ini.</p>
@@ -517,21 +510,13 @@
                     data-caption="Cek cuaca sebelum keluar rumah.">
               <svg class="icon" aria-hidden="true"><use href="#i-weather"/></svg><span>Cuaca</span>
             </button>
-            <button class="sim-tab" type="button" role="tab" id="tab-musik" aria-controls="layar-musik" aria-selected="false" tabindex="-1" data-sim-tab
-                    data-caption="Putar, jeda, dan ganti lagu langsung dari pergelangan tangan.">
-              <svg class="icon" aria-hidden="true"><use href="#i-music"/></svg><span>Kontrol musik</span>
-            </button>
-            <button class="sim-tab" type="button" role="tab" id="tab-ponsel" aria-controls="layar-ponsel" aria-selected="false" tabindex="-1" data-sim-tab
-                    data-caption="Lupa menaruh ponsel? Buat ponsel berbunyi dari jam.">
-              <svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg><span>Find phone</span>
+            <button class="sim-tab" type="button" role="tab" id="tab-suhu" aria-controls="layar-suhu" aria-selected="false" tabindex="-1" data-sim-tab
+                    data-caption="Cek suhu di sekitar Anda langsung dari jam.">
+              <svg class="icon" aria-hidden="true"><use href="#i-thermo"/></svg><span>Suhu</span>
             </button>
             <button class="sim-tab" type="button" role="tab" id="tab-navigasi" aria-controls="layar-navigasi" aria-selected="false" tabindex="-1" data-sim-tab
                     data-caption="Petunjuk arah sederhana saat bepergian.">
               <svg class="icon" aria-hidden="true"><use href="#i-nav"/></svg><span>Navigasi</span>
-            </button>
-            <button class="sim-tab" type="button" role="tab" id="tab-alarm" aria-controls="layar-alarm" aria-selected="false" tabindex="-1" data-sim-tab
-                    data-caption="Pengingat untuk bangun, minum obat, atau jadwal kontrol ke dokter.">
-              <svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg><span>Alarm</span>
             </button>
           </div>
 
@@ -541,6 +526,7 @@
               <div class="sim-watch__strap sim-watch__strap--right" aria-hidden="true"></div>
               <div class="sim-watch__lug sim-watch__lug--left" aria-hidden="true"></div>
               <div class="sim-watch__lug sim-watch__lug--right" aria-hidden="true"></div>
+              <div class="sim-watch__knob" aria-hidden="true"></div>
               <div class="sim-watch__case">
                 <div class="sim-watch__screen">
 
@@ -560,29 +546,15 @@
                     <p class="screen__small">Cerah berawan</p>
                   </div>
 
-                  <!-- Layar: kontrol musik (contoh tampilan) -->
-                  <div class="screen screen--music" role="tabpanel" id="layar-musik" aria-labelledby="tab-musik" data-sim-panel hidden>
-                    <p class="screen__small">Sedang diputar</p>
-                    <p class="screen__title">Lagu kenangan</p>
-                    <div class="screen__controls">
-                      <span class="ctrl" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 6v12M18 6l-8 6 8 6Z"/></svg></span>
-                      <button class="ctrl ctrl--main" type="button" data-sim-toggle aria-pressed="true"
-                              aria-label="Jeda lagu" data-label-on="Jeda lagu" data-label-off="Putar lagu">
-                        <svg class="ctrl__pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 6v12M15.5 6v12"/></svg>
-                        <svg class="ctrl__play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5 19 12 8 18.5Z"/></svg>
-                      </button>
-                      <span class="ctrl" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M17 6v12M6 6l8 6-8 6Z"/></svg></span>
-                    </div>
-                  </div>
-
-                  <!-- Layar: find phone -->
-                  <div class="screen screen--phone" role="tabpanel" id="layar-ponsel" aria-labelledby="tab-ponsel" data-sim-panel hidden>
-                    <div class="screen__ping" aria-hidden="true">
-                      <span></span><span></span>
-                      <svg viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="18" rx="2.2"/><path d="M11.2 17.8h1.6"/></svg>
-                    </div>
-                    <p class="screen__title">Mencari ponsel…</p>
-                    <p class="screen__small">Ponsel Anda sedang berdering</p>
+                  <!-- Layar: suhu (contoh tampilan) -->
+                  <div class="screen screen--temp" role="tabpanel" id="layar-suhu" aria-labelledby="tab-suhu" data-sim-panel hidden>
+                    <svg class="screen__thermo" viewBox="0 0 32 64" aria-hidden="true">
+                      <path d="M11 38V9a5 5 0 0 1 10 0v29a10 10 0 1 1-10 0Z"/>
+                      <circle class="thermo-fill" cx="16" cy="46" r="6"/>
+                      <rect class="thermo-fill" x="14" y="20" width="4" height="26" rx="2"/>
+                    </svg>
+                    <p class="screen__big">26°C</p>
+                    <p class="screen__small">Suhu sekitar</p>
                   </div>
 
                   <!-- Layar: navigasi (contoh tampilan) -->
@@ -592,16 +564,6 @@
                       <p class="screen__big">50 m</p>
                       <p class="screen__small">Belok kiri ke Jl. Melati</p>
                     </div>
-                  </div>
-
-                  <!-- Layar: alarm / pengingat (contoh tampilan) -->
-                  <div class="screen screen--alarm" role="tabpanel" id="layar-alarm" aria-labelledby="tab-alarm" data-sim-panel hidden>
-                    <p class="screen__big">06:30</p>
-                    <p class="screen__small">Minum obat pagi</p>
-                    <button class="switch" type="button" data-sim-toggle aria-pressed="true"
-                            aria-label="Matikan pengingat" data-label-on="Matikan pengingat" data-label-off="Nyalakan pengingat">
-                      <span class="switch__knob"></span>
-                    </button>
                   </div>
 
                 </div>
@@ -646,7 +608,7 @@
         <dl class="spec-list">
           <div class="spec"><dt>Fungsi utama</dt><dd>Alarm darurat dengan mekanisme tali penarik manual</dd></div>
           <div class="spec"><dt>Kekuatan sirene</dt><dd>Lebih dari 100 dB</dd></div>
-          <div class="spec"><dt>Jangkauan suara</dt><dd>Hingga ±200 meter</dd></div>
+          <div class="spec"><dt>Jangkauan suara</dt><dd>Hingga ±100 meter</dd></div>
           <div class="spec"><dt>Gelang</dt><dd>Silikon tahan air, aman dipakai mandi dan tidur</dd></div>
           <div class="spec"><dt>Layar</dt><dd>Jam digital dengan angka besar dan jelas</dd></div>
           <div class="spec"><dt>Baterai</dt><dd>400 mAh</dd></div>
@@ -781,7 +743,7 @@
             <li data-contact-item>
               <a data-contact="whatsapp" href="#kontak" target="_blank" rel="noopener">
                 <svg class="icon" aria-hidden="true"><use href="#i-whatsapp"/></svg>
-                <span><small>WhatsApp</small><span data-contact-text>+62 812-0000-0000</span></span>
+                <span><small>WhatsApp</small><span data-contact-text>+62 851-7429-2750</span></span>
               </a>
             </li>
             <li data-contact-item>

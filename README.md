@@ -37,7 +37,7 @@ watchout-website/
 │   └── main.js              menu, ukuran teks, formulir WhatsApp
 ├── assets/
 │   ├── img/                 logo, gambar mockup, favicon, gambar untuk dibagikan
-│   ├── 3d/                  model 3D (watchout.obj, watchout.mtl, tekstur logo, watchout-model.js)
+│   ├── 3d/                  model 3D (watchout-model.js, watchout.mtl, tekstur logo-baru.png)
 │   └── source/              file asli dari tim (logo & mockup) untuk keperluan revisi
 └── tools/
     ├── konversi-model.html  alat untuk mengganti model 3D
@@ -55,8 +55,8 @@ Buka **js/config.js**, bagian `contact`:
 
 ```js
 contact: {
-  whatsapp: '6281200000000',          // 62 + nomor tanpa angka 0 di depan
-  whatsappLabel: '+62 812-0000-0000', // cara nomor ditampilkan
+  whatsapp: '6285174292750',          // 62 + nomor tanpa angka 0 di depan
+  whatsappLabel: '+62 851-7429-2750', // cara nomor ditampilkan
   email: '',                          // kosong = disembunyikan
   instagram: 'watch0ut09',            // tanpa tanda @
   whatsappGreeting: 'Halo WatchOut!, saya ingin bertanya tentang jam WatchOut!.'
@@ -87,7 +87,7 @@ barisnya otomatis disembunyikan.
 
 **Mengganti gambar:** simpan gambar baru di `assets/img/` dengan nama file yang sama, lalu ganti juga
 versi `.webp`-nya (atau hapus baris `<source … .webp>` di index.html agar memakai `.png`).
-Gambar jam di bagian atas (`watchout-band`) adalah mockup asli tim (1435 × 215 piksel) **tanpa tali**; talinya digambar dengan SVG di `index.html` supaya bisa ditarik. Foto produk (`watchout-product`) adalah foto asli jam WatchOut! (tanpa fitur tarik tali).
+Gambar jam di bagian atas (`watchout-band`, 1725 × 269 piksel) diambil dari render tim "Watchout FIXXXX.png" dengan latar hitam dibuat transparan. Tali penariknya dipotong menjadi dua gambar (`watchout-band-tali-atas.png` yang memanjang dan `watchout-band-tali` yang ikut turun) supaya bisa ditarik. Foto produk (`watchout-product`) adalah foto asli jam WatchOut! (tanpa fitur tarik tali).
 
 Di tampilan 3D, jam diputar supaya layarnya tegak seperti saat dipakai. Sudutnya diatur lewat `roll` di `js/config.js` (90 = layar tegak, tali penarik di kanan; 0 = posisi asli file 3D). Foto-foto di halaman miring mengikuti kursor; kekuatannya diatur lewat `--photo-tilt` di `css/style.css`.
 
@@ -97,22 +97,25 @@ Di tampilan 3D, jam diputar supaya layarnya tegak seperti saat dipakai. Sudutnya
 
 1. Di Blender: **File › Export › Wavefront (.obj)**. Centang *Normals*, *UV Coordinates*, dan *Materials*.
 2. Buka **tools/konversi-model.html** di browser.
-3. Pilih file `.obj`, `.mtl`, dan gambar tekstur (misalnya `logo watchout.png`), lalu tekan **Buat file model**.
+3. Pilih file `.obj`, `.mtl`, dan gambar tekstur (misalnya `logo-baru.png`), lalu tekan **Buat file model**.
 4. Unduh `watchout-model.js` dan simpan ke **assets/3d/**, timpa file lama.
 5. Refresh index.html.
 
-Catatan tentang model saat ini:
+Catatan tentang model saat ini (file "new fix NO CLICKBAIT final bismillah 1000XYAALLAH.obj"):
 
-- **Tali penarik tidak ikut ter-export** di file OBJ, jadi viewer menggambar talinya sendiri
-  mengikuti render mockup. Jika model baru sudah punya tali, matikan tali buatan di `js/config.js`:
-  `cord: { enabled: false }`.
-- File OBJ berisi **salinan jam berukuran sangat kecil** (14 objek) dan **dua potongan kecil yang
-  melayang** jauh dari jam. Semuanya otomatis dibuang oleh konverter; daftarnya bisa dilihat dan diubah
-  di "Pengaturan lanjutan".
+- Badan jam di file asli sangat detail (±266 ribu segitiga, termasuk bagian dalam casing yang tidak
+  terlihat). Untuk website, bagian dalam dibuang dan permukaannya disederhanakan menjadi ±56 ribu segitiga
+  supaya halaman tetap ringan (`watchout-model.js` ±1 MB). Bentuk dan bayangannya tetap mengikuti file asli.
+- File asli tidak disertai `.mtl` dan tekstur, jadi warna diatur di `viewer.materials` pada
+  `js/config.js`, dan logo di bagian belakang memakai `assets/3d/logo-baru.png` (logo merah).
+- **Tali penarik sudah ada di file 3D.** Tali dibagi dua: bagian tipis dekat badan jam
+  (`Puller_String_thread`) memanjang saat ditarik, sisanya (`Puller_String_3d`) ikut turun.
+  Pengaturannya ada di `viewer.cord` pada `js/config.js`.
+- Objek `Line001_1` (garis kecil yang melayang) dan logo lama `logo_watchout` tidak dipakai.
 - Layar jam pada model 3D menampilkan **jam yang berjalan sesuai waktu sekarang**, dan berubah menjadi
   tampilan "Minta tolong!" saat alarm simulasi berbunyi. Bisa dimatikan di `viewer.screen.enabled`.
-- Warna material di file `.mtl` tidak semuanya sama dengan render (misalnya penghubung tali tertulis biru),
-  jadi warna yang dipakai diatur di `viewer.materials` pada `js/config.js`.
+- Jika memakai alat konversi untuk model baru yang sangat detail, ukuran `watchout-model.js` bisa
+  menjadi besar (beberapa MB). Sebaiknya kurangi detailnya dulu di Blender (modifier *Decimate*).
 
 ---
 
@@ -149,8 +152,8 @@ dibagikan di WhatsApp atau media sosial.
 Beberapa isi masih berupa contoh dan sebaiknya disesuaikan:
 
 - Kontak di `js/config.js` (lihat bagian 3).
-- Tampilan layar di simulator fitur: suhu "29°", jalan "Jl. Melati", lagu "Lagu kenangan",
-  dan pengingat "06:30 Minum obat pagi". Semuanya hanya ilustrasi tampilan.
+- Tampilan layar di simulator fitur: cuaca "29°", suhu sekitar "26°C", dan jalan "Jl. Melati".
+  Semuanya hanya ilustrasi tampilan.
 - Data statistik, kutipan Oma Halimah, perbandingan kompetitor, harga, dan spesifikasi diambil dari
   proposal dan pitch deck WatchOut!.
 - QRIS yang dipakai atas nama merchant "NEXUS STORE". QRIS ini statis, jadi pembeli mengetik nominal sendiri.

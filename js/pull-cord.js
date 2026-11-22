@@ -15,7 +15,8 @@
      data-axis     isi "x" jika tali ditarik ke kanan (default: ke bawah)
      data-scale    skala grup SVG tali, jika grup tali diperkecil/diperbesar (default 1)
      data-stretch-len  untuk tali dari foto ([data-cord-stretch]): panjang tali dalam satuan data-view-w;
-                   tali foto memanjang ke bawah saat ditarik (tanpa SVG)
+                   tali gambar memanjang ke bawah saat ditarik (tanpa SVG);
+                   [data-cord-slide] = bagian bawah tali yang ikut turun
    Semua angka memakai satuan viewBox SVG.
    ========================================================================== */
 (function () {
@@ -28,7 +29,8 @@
     var thread = root.querySelector('[data-cord-thread]');
     var lower = root.querySelector('[data-cord-lower]');
     var handle = root.querySelector('[data-pullcord-handle]');
-    var stretch = root.querySelector('[data-cord-stretch]');
+    var stretch = root.querySelector('[data-cord-stretch]');  // bagian tali (gambar) yang memanjang
+    var slide = root.querySelector('[data-cord-slide]');      // bagian tali (gambar) yang ikut turun
     if (!handle || (!stretch && (!svg || !thread || !lower))) return;
     var measure = svg || root;
     var STRETCH_LEN = Number(root.getAttribute('data-stretch-len')) || 100;
@@ -52,7 +54,8 @@
       var p = Math.round(pull * 10) / 10;
       if (tpl) thread.setAttribute('d', tpl.replace(/\{y\}/g, String(baseY + p)));
       if (lower) lower.setAttribute('transform', 'translate(0 ' + p + ')');
-      if (stretch) stretch.style.transform = 'scaleY(' + Math.max(0.97, 1 + p / STRETCH_LEN).toFixed(4) + ')';
+      if (stretch) stretch.style.transform = 'scaleY(' + Math.max(0.5, 1 + p / STRETCH_LEN).toFixed(4) + ')';
+      if (slide) slide.style.transform = 'translateY(' + (p / unitsPerPx()).toFixed(2) + 'px)';
       var px = (p * SCALE / unitsPerPx()).toFixed(2);
       handle.style.transform = AXIS_X ? 'translate(' + px + 'px, -50%)' : 'translate(-50%, ' + px + 'px)';
       root.style.setProperty('--pull', Math.max(0, Math.min(1, pull / TRIGGER)).toFixed(3));

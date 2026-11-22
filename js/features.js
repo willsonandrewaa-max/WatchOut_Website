@@ -55,14 +55,4 @@
   });
   var initial = tabs.filter(function (t) { return t.getAttribute('aria-selected') === 'true'; })[0] || tabs[0];
   if (initial) select(initial, false);
-
-  /* ---------- tombol kecil di dalam layar (musik, sakelar alarm) ---------- */
-  document.addEventListener('click', function (e) {
-    var b = e.target.closest ? e.target.closest('[data-sim-toggle]') : null;
-    if (!b) return;
-    var on = b.getAttribute('aria-pressed') !== 'true';
-    b.setAttribute('aria-pressed', String(on));
-    var label = on ? b.getAttribute('data-label-on') : b.getAttribute('data-label-off');
-    if (label) b.setAttribute('aria-label', label);
-  });
 })();

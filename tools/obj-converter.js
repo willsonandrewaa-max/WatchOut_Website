@@ -176,6 +176,7 @@
    *   smoothAngle:  sudut "auto smooth" dalam derajat (default 40). Permukaan yang
    *                 sudutnya lebih kecil dari ini dihaluskan, yang lebih tajam dibuat
    *                 bersudut. Isi 0 untuk memakai normal asli dari file OBJ.
+   *   keepNormals:  daftar nama objek yang tetap memakai normal dari file OBJ
    */
   function convert(objText, mtlText, options) {
     options = options || {};
@@ -260,7 +261,8 @@
       };
 
       var keyMap = {}, vPos = [], vNrm = [], vUv = [], hasNormal = true, indices = [];
-      var smooth = smoothAngle > 0 ? autoNormals(part, smoothAngle) : null;
+      var keepN = (options.keepNormals || []).indexOf(part.object) >= 0; // pakai normal dari file OBJ
+      var smooth = smoothAngle > 0 && !keepN ? autoNormals(part, smoothAngle) : null;
       function vert(c, sn) {
         var nk = sn ? Math.round(sn[0] * 1000) + ':' + Math.round(sn[1] * 1000) + ':' + Math.round(sn[2] * 1000) : c[2];
         var key = c[0] + '/' + (wantUV ? c[1] : -1) + '/' + nk;

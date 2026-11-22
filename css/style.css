@@ -242,11 +242,11 @@ html[data-alarm="on"] .hero::before { opacity: 1; animation: hero-pulse 1s ease-
 .hero__stage {
   /* ukuran gambar jam: lebih lebar dari layar agar tali jam membentang dari tepi ke tepi */
   --fig-w: clamp(1000px, calc(100vw - 60px), 1700px);
-  --fig-h: calc(var(--fig-w) * 215 / 1435);
+  --fig-h: calc(var(--fig-w) * 269 / 1725);
   position: relative;
   margin-top: clamp(24px, 3vw, 40px);
 }
-.band { position: relative; height: var(--fig-h); margin-bottom: calc(var(--fig-h) * 1.1); }
+.band { position: relative; height: var(--fig-h); margin-bottom: calc(var(--fig-h) * 1.32); }
 .band__figure {
   position: absolute; top: 0; left: 50%; width: var(--fig-w);
   transform: translateX(-50%); isolation: isolate;
@@ -254,7 +254,7 @@ html[data-alarm="on"] .hero::before { opacity: 1; animation: hero-pulse 1s ease-
 .band__img { width: 100%; height: auto; filter: drop-shadow(0 22px 24px rgba(120, 8, 18, 0.2)); }
 .band__figure::before { /* cahaya merah di belakang jam saat tali ditarik */
   content: ""; position: absolute; z-index: -1; pointer-events: none;
-  left: calc(717 / 1435 * 100%); top: 50%; width: 30%; aspect-ratio: 1;
+  left: calc(865 / 1725 * 100%); top: calc(160 / 269 * 100%); width: 30%; aspect-ratio: 1;
   transform: translate(-50%, -50%);
   background: radial-gradient(closest-side, rgba(230, 45, 22, 0.42), rgba(230, 45, 22, 0));
   opacity: var(--pull, 0);
@@ -263,7 +263,7 @@ html[data-alarm="on"] .band__figure::before { opacity: 1; }
 
 .band__rings {
   position: absolute; z-index: -1; pointer-events: none;
-  left: calc(717 / 1435 * 100%); top: calc(108 / 215 * 100%); width: 0; height: 0;
+  left: calc(865 / 1725 * 100%); top: calc(160 / 269 * 100%); width: 0; height: 0;
 }
 .band__rings span {
   position: absolute; left: -700px; top: -700px; width: 1400px; height: 1400px;
@@ -280,6 +280,15 @@ html[data-alarm="on"] .band__rings span:nth-child(4) { animation-delay: 1.8s; }
 }
 
 .band__cord { position: absolute; left: 0; top: 0; width: 100%; height: auto; overflow: visible; pointer-events: none; }
+/* tali penarik dari gambar jam: posisi dalam piksel gambar (1725 x 269) */
+.band__thread, .band__lower {
+  position: absolute; left: calc(795 / 1725 * 100%); width: calc(60 / 1725 * 100%);
+  pointer-events: none; transform-origin: 50% 0;
+  filter: drop-shadow(0 0 1px rgba(88, 0, 16, 0.55)) drop-shadow(0 6px 6px rgba(88, 0, 16, 0.18));
+}
+.band__thread { top: 100%; height: auto; }
+.band__lower { top: calc(294 / 269 * 100%); }
+.band__lower img { display: block; width: 100%; height: auto; }
 .cord__thread { fill: none; stroke: #C4BFBB; stroke-width: 1.4; stroke-linecap: round; }
 .cord__loop-edge { fill: none; stroke: #B5AFAA; stroke-width: 8.8; }
 .cord__loop { fill: none; stroke: #F6F3F0; stroke-width: 6.6; }
@@ -289,8 +298,8 @@ html[data-alarm="on"] .band__rings span:nth-child(4) { animation-delay: 1.8s; }
 .cord__shine { fill: #fff; opacity: .85; }
 
 .band__handle {
-  position: absolute; left: calc(746.5 / 1435 * 100%); top: calc(220 / 215 * 100%);
-  width: max(64px, calc(76 / 1435 * 100%)); height: calc(222 / 215 * 100%);
+  position: absolute; left: calc(825 / 1725 * 100%); top: calc(262 / 269 * 100%);
+  width: max(64px, calc(76 / 1725 * 100%)); height: calc(300 / 269 * 100%);
   transform: translate(-50%, 0);
   border: 0; border-radius: 40px; padding: 0; background: transparent;
   cursor: grab; touch-action: none; -webkit-tap-highlight-color: transparent;
@@ -300,8 +309,9 @@ html[data-alarm="on"] .band__rings span:nth-child(4) { animation-delay: 1.8s; }
 
 .cord-hint { /* ikut alur halaman (bukan absolute) agar hero memanjang bila teks membesar */
   position: relative;
-  margin-top: calc(var(--fig-h) * -0.98);
-  margin-left: calc(50% + var(--fig-w) * 0.0202 + 64px);
+  margin-top: calc(var(--fig-h) * -1.2);
+  margin-bottom: calc(var(--fig-h) * 0.42); /* ruang untuk ujung tali */
+  margin-left: calc(50% - var(--fig-w) * 0.0217 + 64px);
   width: min(440px, calc(50% - 120px));
 }
 .cord-hint__arrow {
@@ -559,42 +569,51 @@ html:not(.js) .viewer__fallback { display: grid; }
 .sim__caption { margin: 0; min-height: 3.2em; max-width: 34ch; text-align: center; color: var(--ink-soft); }
 
 .sim-watch { position: relative; width: min(100%, 520px); aspect-ratio: 520 / 560; }
-/* Jam tampil tegak seperti dipakai: tali jam di atas & bawah, tali penarik di kanan */
+/* Jam tampil tegak seperti dipakai: casing putih, tali jam merah di atas & bawah,
+   kenop hitam di kiri, tali penarik di kanan (mengikuti model 3D) */
 .sim-watch__strap {
-  position: absolute; left: 34.5%; width: 21%; height: 27%;
-  background: linear-gradient(90deg, #DA2A10, #EE3B23 45%, #DA2A10);
+  position: absolute; left: 33%; width: 22%; height: 34%; z-index: 1;
+  background: linear-gradient(90deg, #A80C16, #D3141F 45%, #B30F19);
 }
 .sim-watch__strap--left { /* tali atas */
-  top: -4%; border-radius: 0 0 10px 10px;
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 60%); mask-image: linear-gradient(180deg, transparent 0%, #000 60%);
+  top: -4%;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 55%); mask-image: linear-gradient(180deg, transparent 0%, #000 55%);
 }
 .sim-watch__strap--right { /* tali bawah */
-  bottom: -4%; border-radius: 10px 10px 0 0;
-  -webkit-mask-image: linear-gradient(0deg, transparent 0%, #000 60%); mask-image: linear-gradient(0deg, transparent 0%, #000 60%);
+  bottom: -4%;
+  -webkit-mask-image: linear-gradient(0deg, transparent 0%, #000 55%); mask-image: linear-gradient(0deg, transparent 0%, #000 55%);
 }
-.sim-watch__lug { /* penghubung tali berwarna krem */
-  position: absolute; left: 31%; width: 28%; height: 16%;
-  background: linear-gradient(90deg, #DCCBBA 0%, #FDF8F1 40%, #EFE3D5 70%, #DCCBBA 100%);
+.sim-watch__lug { /* kaki casing putih di kiri-kanan tali */
+  position: absolute; left: 27.5%; width: 33%; height: 10%;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #DDD8D0 0%, #FFFFFF 35%, #F1EEE9 70%, #DAD5CD 100%);
+  box-shadow: inset 0 -3px 0 rgba(120, 104, 96, 0.18);
 }
-.sim-watch__lug--left { top: 18%; clip-path: polygon(12% 0, 88% 0, 100% 100%, 0 100%); }
-.sim-watch__lug--right { bottom: 18%; clip-path: polygon(0 0, 100% 0, 88% 100%, 12% 100%); }
+.sim-watch__lug--left { top: 25%; }
+.sim-watch__lug--right { bottom: 26%; }
+.sim-watch__knob { /* kenop hitam di sisi kiri */
+  position: absolute; left: 21.6%; top: 53%; width: 5.4%; height: 9%;
+  border-radius: 4px 2px 2px 4px;
+  background: linear-gradient(180deg, #4A4446 0%, #1E1A1B 45%, #0E0C0C 100%);
+  box-shadow: 0 6px 10px rgba(30, 10, 12, 0.25);
+}
 .sim-watch__case {
-  position: absolute; left: 28%; top: 31.5%;
-  width: 34%; aspect-ratio: 2.77 / 3.25; padding: 3.6%;
-  border-radius: 26% / 22%;
-  background: linear-gradient(160deg, #F7767C 0%, #EE4D55 55%, #D93A44 100%);
-  box-shadow: inset 0 -7px 0 rgba(150, 18, 28, 0.35), inset 0 3px 0 rgba(255, 255, 255, 0.35), 0 26px 40px rgba(120, 8, 18, 0.25);
+  position: absolute; left: 26%; top: 32%; z-index: 2;
+  width: 36%; aspect-ratio: 1 / 1.04; padding: 6.4%;
+  border-radius: 17%;
+  background: linear-gradient(155deg, #FFFFFF 0%, #F2EFEA 55%, #DFDAD2 100%);
+  box-shadow: inset 0 -6px 0 rgba(120, 104, 96, 0.18), inset 0 3px 0 rgba(255, 255, 255, 0.9), 0 26px 40px rgba(88, 0, 16, 0.18);
 }
 .sim-watch__screen {
   position: relative; width: 100%; height: 100%; overflow: hidden;
-  border-radius: 21% / 18%;
+  border-radius: 12%;
   background: radial-gradient(120% 120% at 25% 0%, #2A1215 0%, #0A0304 62%);
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.55);
   color: #FFF4EA;
   container-type: inline-size;
 }
 /* tali penarik keluar dari sisi kanan jam, sama seperti model 3D */
-.sim-watch__cord { position: absolute; top: 50%; left: 61.5%; width: 31%; height: auto; transform: translateY(-50%); }
+.sim-watch__cord { position: absolute; top: 47%; left: 61.5%; width: 31%; height: auto; transform: translateY(-50%); }
 
 .screen {
   position: absolute; inset: 0; padding: 8%;
@@ -606,7 +625,7 @@ html:not(.js) .viewer__fallback { display: grid; }
 @keyframes screen-in { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
 .screen p { margin: 0; }
 .screen__time { font-size: 30cqi; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
-.screen__date { font-size: 8cqi; font-weight: 700; color: #FF9A92; }
+.screen__date { font-size: 7cqi; white-space: nowrap; font-weight: 700; color: #FF9A92; }
 .screen__big { font-size: 17cqi; font-weight: 800; letter-spacing: -0.01em; }
 .screen__title { font-size: 8.5cqi; font-weight: 800; }
 .screen__small { font-size: 5.8cqi; font-weight: 700; color: #FF9A92; }
@@ -614,36 +633,12 @@ html:not(.js) .viewer__fallback { display: grid; }
 .art-sun { fill: #FFC14D; }
 .art-cloud { fill: #FFF4EA; }
 .screen--weather { gap: 1cqi; }
-.screen__controls { display: flex; align-items: center; gap: 6cqi; margin-top: 3cqi; }
-.ctrl { display: grid; place-items: center; width: 13cqi; height: 13cqi; color: #FFF4EA; }
-.ctrl svg { width: 70%; height: 70%; fill: currentColor; stroke: currentColor; stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
-.ctrl--main {
-  width: 19cqi; height: 19cqi; border: 0; border-radius: 50%; padding: 0; cursor: pointer;
-  background: var(--coral); color: #fff;
-}
-.ctrl--main .ctrl__play { display: none; }
-.ctrl--main[aria-pressed="false"] .ctrl__play { display: block; }
-.ctrl--main[aria-pressed="false"] .ctrl__pause { display: none; }
-.ctrl__pause { fill: none !important; stroke-width: 3.4 !important; }
-.screen__ping { position: relative; width: 30cqi; height: 30cqi; display: grid; place-items: center; margin-bottom: 2cqi; }
-.screen__ping svg { width: 15cqi; height: 15cqi; fill: none; stroke: #FFF4EA; stroke-width: 2; stroke-linecap: round; }
-.screen__ping span { position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--coral); animation: ping 1.8s ease-out infinite; }
-.screen__ping span + span { animation-delay: .9s; }
-@keyframes ping { from { transform: scale(.45); opacity: 1; } to { transform: scale(1.05); opacity: 0; } }
+.screen--temp { gap: 1.5cqi; }
+.screen__thermo { width: 20cqi; height: auto; fill: none; stroke: #FFF4EA; stroke-width: 3; stroke-linecap: round; }
+.screen__thermo .thermo-fill { fill: var(--coral); stroke: none; }
 .screen--nav { flex-direction: row; gap: 5cqi; text-align: left; }
 .screen__turn { width: 30cqi; height: auto; fill: none; stroke: var(--coral); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
 .screen--nav .screen__small { max-width: 40cqi; margin-top: 1.5cqi; }
-.switch {
-  position: relative; width: 22cqi; height: 12cqi; margin-top: 3cqi; padding: 0; cursor: pointer;
-  border: 0; border-radius: 99px; background: rgba(255, 244, 234, 0.25);
-  transition: background-color .2s ease;
-}
-.switch__knob {
-  position: absolute; top: 1.4cqi; left: 1.4cqi; width: 9.2cqi; height: 9.2cqi; border-radius: 50%;
-  background: #fff; transition: transform .2s ease;
-}
-.switch[aria-pressed="true"] { background: #3DBE6E; }
-.switch[aria-pressed="true"] .switch__knob { transform: translateX(10cqi); }
 
 /* ==========================================================================
    12. SPESIFIKASI
@@ -889,8 +884,9 @@ html.pay-open { overflow: hidden; }
   body { font-size: 1.1875rem; }
   .brand img { height: 38px; }
   .hero__stage { --fig-w: clamp(1000px, calc(100vw * 2.9), 1400px); }
-  .band { margin-bottom: calc(var(--fig-h) * 1.06); }
+  .band { margin-bottom: calc(var(--fig-h) * 1.3); }
   .cord-hint { width: auto; margin: 0 var(--gutter); text-align: center; }
+  .band + .cord-hint { margin-bottom: 0; }
   .cord-hint__arrow { display: none; }
   .cord-hint__actions { justify-content: center; }
   .how__panel { border-radius: var(--radius-md); }
@@ -959,7 +955,7 @@ html.pay-open { overflow: hidden; }
 }
 [data-pullcord].is-dragging .pull-handle { cursor: grabbing; }
 .pull-handle:focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
-.sim-watch__pull { position: absolute; top: 50%; left: 61.5%; width: 31%; transform: translateY(-50%); }
+.sim-watch__pull { position: absolute; top: 47%; left: 61.5%; width: 31%; transform: translateY(-50%); z-index: 3; }
 .sim-watch__pull .sim-watch__cord { position: static; display: block; width: 100%; transform: none; overflow: visible; }
 .sim-watch__pull .pull-handle { left: 6%; top: 50%; width: 92%; height: max(48px, 160%); transform: translate(0, -50%); cursor: ew-resize; }
 .product__pull { position: relative; width: min(100%, 520px); margin: 0 auto 40px; }

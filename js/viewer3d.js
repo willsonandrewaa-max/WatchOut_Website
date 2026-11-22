@@ -28,9 +28,9 @@
    * zoom = jarak relatif, y = titik fokus vertikal)
    * ------------------------------------------------------------------ */
   var VIEWS = {
-    front: { yaw: -0.34, pitch: 0.10, zoom: 0.86, x: 0.85, y: 0 },
-    back:  { yaw: Math.PI - 0.34, pitch: 0.08, zoom: 0.86, x: 0.85, y: 0 },
-    cord:  { yaw: -0.5, pitch: 0.06, zoom: 0.66, x: 1.9, y: 0 }
+    front: { yaw: -0.34, pitch: 0.10, zoom: 1.0, x: 2.9, y: 0 },
+    back:  { yaw: Math.PI - 0.34, pitch: 0.08, zoom: 1.0, x: 2.9, y: 0 },
+    cord:  { yaw: -0.5, pitch: 0.06, zoom: 0.66, x: 4.3, y: 0 }
   };
 
   /* ------------------------------------------------------------------ *
@@ -372,6 +372,7 @@
   var gl, prog, floorProg, parts = [], cordMeshes = null, floorBuf = null, screenTex = null, screenCanvas = null;
   var roll = function (p) { return p; };
   function rolledMatrix(cols, t) { return transformMatrix(cols.map(function (c) { return roll(c); }), roll(t)); }
+  var modelCord = false, threadLen = 0.7, ORI = null;
   var model = null, centerW = [0, 0, 0], modelMatrix = null, cordAttach = [0, 0, 0], floorY = -5;
   var running = false, raf = 0, lastT = 0, lastSecond = -1, interacted = false;
   var cam = { yaw: VIEWS.front.yaw, pitch: VIEWS.front.pitch, zoom: 1.2, x: VIEWS.front.x, y: VIEWS.front.y };
@@ -413,6 +414,7 @@
               ori[0][1] * p[0] + ori[1][1] * p[1] + ori[2][1] * p[2],
               ori[0][2] * p[0] + ori[1][2] * p[1] + ori[2][2] * p[2]];
     }
+    ORI = ori; threadLen = (CFG.cord && CFG.cord.threadLength) || 0.7;
     var focus = model.parts.filter(function (p) { return p.object === (CFG.focusPart || 'mesh_3'); })[0] || null;
     var fb = focus ? focus.bbox : model.bounds;
     centerW = orient([(fb.min[0] + fb.max[0]) / 2, (fb.min[1] + fb.max[1]) / 2, (fb.min[2] + fb.max[2]) / 2]);
@@ -432,6 +434,7 @@
     var screenMat = CFG.screen && CFG.screen.enabled !== false ? CFG.screen.material : null;
     var textures = {};
 
+    var cordCfg = CFG.cord || {};
     model.parts.forEach(function (p) {
       var mtl = model.materials[p.material] || {};
       var mc = matCfg[p.material] || {};
@@ -463,7 +466,9 @@
         if (!textures[mtl.map]) textures[mtl.map] = loadTexture(model.textures[mtl.map]);
         mapTex = textures[mtl.map];
       }
+      var role = cordCfg.threadPart === p.object ? 'thread' : cordCfg.part === p.object ? 'lower' : null;
       parts.push({
+        role: role,
         pos: buffer(gl.ARRAY_BUFFER, pos), nrm: buffer(gl.ARRAY_BUFFER, nrm), uv: uv ? buffer(gl.ARRAY_BUFFER, uv) : null,
         idx: buffer(gl.ELEMENT_ARRAY_BUFFER, idx), count: idx.length, type: p.index32 ? gl.UNSIGNED_INT : gl.UNSIGNED_SHORT,
         nrmType: gl.BYTE, color: mc.color ? hexToLinear(mc.color) : (mtl.kd || [0.8, 0.8, 0.8]),
@@ -475,8 +480,10 @@
     // Cord
     var cc = CFG.cord || {};
     var lowest = -Infinity;
-    if (cc.enabled !== false) {
-      cordAttach = sub(orient(cc.attach || [2.774, 0.298, 0.048]), centerW);
+    if (cc.enabled !== false) cordAttach = sub(orient(cc.attach || [2.774, 0.298, 0.048]), centerW);
+    // Tali dari file 3D: bagian "thread" memanjang, bagian "part" ikut turun saat ditarik
+    modelCord = !!(cc.enabled !== false && cc.part && parts.some(function (p) { return p.role; }));
+    if (!modelCord && cc.enabled !== false) {
       var cord = buildCord();
       var col = hexToLinear(cc.color || '#F4F1EE');
       cordMeshes = {
@@ -602,7 +609,7 @@
     var aspect = canvas.width / canvas.height;
     var fov = 28 * Math.PI / 180;
     // keep the watch + cord framed on any screen shape
-    var frameH = 7.6, frameW = 7.8;
+    var frameH = 8.4, frameW = 11.6;
     var dist = Math.max((frameH / 2) / Math.tan(fov / 2), (frameW / 2) / (Math.tan(fov / 2) * aspect)) * cam.zoom;
     var target = [cam.x, cam.y, 0];
     var eye = [target[0] + dist * Math.sin(cam.yaw) * Math.cos(cam.pitch), target[1] + dist * Math.sin(cam.pitch), target[2] + dist * Math.cos(cam.yaw) * Math.cos(cam.pitch)];
@@ -644,7 +651,14 @@
     gl.uniform1f(u.uExposure, 1.0);
 
     var opaque = parts.filter(function (p) { return !p.transparent; });
-    opaque.forEach(function (p) { drawPart(p); });
+    opaque.forEach(function (p) {
+      if (p.role === 'thread') {  // tali tipis memanjang dari titik kaitan
+        var s2 = (threadLen + pull) / threadLen, c = centerW, A1 = cordAttach[1];
+        drawPart(p, rolledMatrix(ORI.map(function (v) { return [v[0], v[1] * s2, v[2]]; }), [-c[0], A1 + (-c[1] - A1) * s2, -c[2]]));
+      } else if (p.role === 'lower') {
+        drawPart(p, rolledMatrix(ORI, [-centerW[0], -centerW[1] - pull, -centerW[2]]));
+      } else drawPart(p);
+    });
     if (cordMeshes) {
       var A = cordAttach, stretch = (0.44 + pull) / 0.44;
       drawPart(cordMeshes.thread, rolledMatrix([[1, 0, 0], [0, stretch, 0], [0, 0, 1]], A));
